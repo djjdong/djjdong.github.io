@@ -22,7 +22,7 @@
   <meta property="og:image" content="http://djjdong.github.io/uncategorized/cve2017_5123/cgroup_can_fork.jpeg">
   <meta property="og:image" content="http://djjdong.github.io/uncategorized/cve2017_5123/do_each_subsys_mask.jpeg">
   <meta property="og:image" content="http://djjdong.github.io/uncategorized/cve2017_5123/for_each_set_bit.jpeg">
-  <meta property="og:updated_time" content="2019-02-03T02:37:53.067Z">
+  <meta property="og:updated_time" content="2019-03-10T14:25:36.470Z">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Cve2017_5123">
   <meta name="twitter:description" content="利用 CVE-2017-5123 本地提权 description    Chris Salls discovered that the waitid() syscall in Linux kernel v4.13 was refactored, it accidentally stopped checking that the incoming argument was pointing to">
@@ -188,7 +188,7 @@
                   </table>
                 </figure>
               </p>
-              <p>waitid函数返回的时候会把信息写在 <code>infop</code> 中, 先看写的内容<br><img src="waitid.png" alt=""><br>从 0x602010 开始</p>
+              <p>waitid函数返回的时候会把信息写在 <code>infop</code> 中, 先看写的内容<br><img src="./waitid.png" alt=""><br>从 0x602010 开始</p>
               <p>该漏洞的一个很尴尬的地方在于无法对写入内容（6个不同字段中的任何一个）施予足够控制，<br>info.status 是32 位int， 但被限制在0&lt;status&lt;256。<br>info.pid 可在某种程度上通过反复fork操作进行控制，但最大值为0x8000。<br>
                 <figure class="highlight plain">
                   <table>
@@ -263,7 +263,7 @@
                 <li>copy_thread 将父进程的寄存器上下文复制给子进程 （在这里中，fork 会 执行childregs-&gt;rax=0;<br> 因此 子进程返回值是0， 且p-&gt;thread.ip =(unsigned long )ret_from_fork的 首地址<br> 貌似可以劫持进程 ip &gt;_&gt; ）</li>
               </ul>
               <h4 id="想要利用的地方"><a href="#想要利用的地方" class="headerlink" title="想要利用的地方"></a>想要利用的地方</h4>
-              <p>fork（）会调用do_fork()， do_fork()会调用 copy_process()，copy_process() 会调用<strong>cgroup_can_fork()</strong><br><img src="cgroup_can_fork.jpeg" alt=""><br><img src="do_each_subsys_mask.jpeg" alt=""><br><img src="for_each_set_bit.jpeg" alt=""></p>
+              <p>fork（）会调用do_fork()， do_fork()会调用 copy_process()，copy_process() 会调用<strong>cgroup_can_fork()</strong><br><img src="./cgroup_can_fork.jpeg" alt=""><br><img src="./do_each_subsys_mask.jpeg" alt=""><br><img src="./for_each_set_bit.jpeg" alt=""></p>
               <p>分析<br>for_each_set_bit 会调用find_first_bit 和find_next_bit， 会搜索传入的have_canfork_callback变量，最终返回值ssid 是位图中小于cgroup_subsys_count的最后一位1的索引值</p>
               <p>cgroup_subsys 是一个全局的cgroup_subsys struct 数组，其中保存了一系列的函数指针，cgroup 需要用户自定义，其can_fork 函数指针为NULL.</p>
               <h3 id="调试过程"><a href="#调试过程" class="headerlink" title="调试过程"></a>调试过程</h3>
@@ -298,11 +298,11 @@
 
           <nav id="article-nav">
 
-            <a href="/uncategorized/idrmd/" id="article-nav-newer" class="article-nav-link-wrap">
+            <a href="/uncategorized/angr-base/" id="article-nav-newer" class="article-nav-link-wrap">
               <strong class="article-nav-caption">&lt;</strong>
               <div class="article-nav-title">
 
-                (no title)
+                Angr_base
 
               </div>
             </a>

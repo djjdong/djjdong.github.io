@@ -5,7 +5,7 @@
   <meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
 
-  <title>bubbling</title>
+  <title>Idr | bubbling</title>
 
   <!-- keywords -->
 
@@ -13,15 +13,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="idr机制 idr介绍 系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。用到id">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="bubbling">
+  <meta property="og:title" content="Idr">
   <meta property="og:url" content="http://djjdong.github.io/uncategorized/idrmd/index.html">
   <meta property="og:site_name" content="bubbling">
   <meta property="og:description" content="idr机制 idr介绍 系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。用到id">
   <meta property="og:locale" content="default">
   <meta property="og:image" content="http://djjdong.github.io/uncategorized/idrmd/idr_struct.jpg">
-  <meta property="og:updated_time" content="2019-02-03T13:47:54.926Z">
+  <meta property="og:updated_time" content="2019-03-10T14:26:09.394Z">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="bubbling">
+  <meta name="twitter:title" content="Idr">
   <meta name="twitter:description" content="idr机制 idr介绍 系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。用到id">
   <meta name="twitter:image" content="http://djjdong.github.io/uncategorized/idrmd/idr_struct.jpg">
 
@@ -129,13 +129,28 @@
 
           <div class="article-meta">
             <a href="/uncategorized/idrmd/" class="article-date">
-              <time datetime="2019-02-03T13:47:54.817Z" itemprop="datePublished">2019-02-03</time>
+              <time datetime="2019-03-10T14:01:21.000Z" itemprop="datePublished">2019-03-10</time>
             </a>
           </div>
 
           <div class="article-inner">
 
             <input type="hidden" class="isFancy">
+
+
+            <header class="article-header">
+              <h1 class="article-title" itemprop="name">
+                Idr
+
+              </h1>
+            </header>
+
+            <div class="article-info article-info-post">
+
+
+
+              <div class="clearfix"></div>
+            </div>
 
 
             <div class="article-entry" itemprop="articleBody">
@@ -173,7 +188,7 @@
                   </table>
                 </figure>
               </p>
-              <p><img src="idr_struct.jpg" alt="idr struct"></p>
+              <p><img src="./idr_struct.jpg" alt="idr struct"></p>
               <h3 id="宏定义"><a href="#宏定义" class="headerlink" title="宏定义"></a>宏定义</h3>
               <blockquote>
                 <p>IDR_BITS：子结点索引位数，5或6；bitmap是long类型，表示子结点个数为sizeof(long)<em>8；long占32位时，可表示32个子结点，则需索引位数为5；long占64位时，则需索引位数为6<br>IDR_SIZE：子结点个数，(1 &lt;&lt; IDR_BITS)<br>IDR_MASK：子结点索引掩码，((1 &lt;&lt; IDR_BITS)-1)<br>MAX_ID_SHIFT：ID空间大小位数，(sizeof(int)</em>8 - 1)；ID空间为0~0x7fffffff，即正整数<br>MAX_LEVEL：表示ID空间所需的层数，(MAX_ID_SHIFT + IDR_BITS - 1) / IDR_BITS；n层基数树表示id空间的个数=IDR_SIZE^n=1&lt;&lt;(n*IDR_BITS)，则表示整个ID空间需要n=roundup(log2(1&lt;&lt;MAX_ID_SHIFT)/IDR_BITS)=(MAX_ID_SHIFT + IDR_BITS - 1) / IDR_BITS层<br>IDR_FREE_MAX：表示idr缓存在分配id过程中所需结点的最大值，MAX_LEVEL + MAX_LEVEL；分配id过程中，可能需要对树进行扩容，如果出现结点为空还要分配结点；比如空树情况，分配一个值为0x7fffffff的id，则首先要扩容MAX_LEVEL个结点，再添加MAX_LEVEL-1个结点后才能正确分配id</p>
@@ -186,18 +201,18 @@
 
           <nav id="article-nav">
 
-            <a href="/uncategorized/angr-base/" id="article-nav-newer" class="article-nav-link-wrap">
+            <a href="/uncategorized/angr-easy-use/" id="article-nav-newer" class="article-nav-link-wrap">
               <strong class="article-nav-caption">&lt;</strong>
               <div class="article-nav-title">
 
-                Angr_base
+                Angr_easy_use
 
               </div>
             </a>
 
 
-            <a href="/uncategorized/cve2017_5123/" id="article-nav-older" class="article-nav-link-wrap">
-              <div class="article-nav-title">Cve2017_5123</div>
+            <a href="/uncategorized/angr-base/" id="article-nav-older" class="article-nav-link-wrap">
+              <div class="article-nav-title">Angr_base</div>
               <strong class="article-nav-caption">&gt;</strong>
             </a>
 

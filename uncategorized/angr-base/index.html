@@ -22,7 +22,7 @@
   <meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr3.png">
   <meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr1.png">
   <meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr2.png">
-  <meta property="og:updated_time" content="2019-03-10T14:02:13.963Z">
+  <meta property="og:updated_time" content="2019-03-10T14:25:12.512Z">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Angr_base">
   <meta name="twitter:description" content="Angr’s modules    CLE 负责装载二进制对象以及它所依赖的库   ArchInfo 是包含特定于体系结构的信息的类的集合   PyVex 是用了VEX 这个中间语言来分析程序   SimuVEX 是VEX 执行模拟器 它允许你控制符号执行   Clarify 主要专注于将变量符号化，生成约束式并求解约束式   angr以及以上 则是上层封装好的接口   Angr Core con">
@@ -167,9 +167,9 @@
                 <li>Clarify 主要专注于将变量符号化，生成约束式并求解约束式</li>
                 <li>angr以及以上 则是上层封装好的接口</li>
               </ol>
-              <p><img src="angr4.png" alt=""></p>
+              <p><img src="./angr4.png" alt=""></p>
               <h1 id="Angr-Core-concepts"><a href="#Angr-Core-concepts" class="headerlink" title="Angr Core concepts"></a>Angr Core concepts</h1>
-              <p><img src="angr3.png" alt=""></p>
+              <p><img src="./angr3.png" alt=""></p>
               <h2 id="CLE"><a href="#CLE" class="headerlink" title="CLE"></a>CLE</h2>
               <p><a href="http://angr.io/api-doc/cle.html" target="_blank" rel="noopener">CLE API docs</a></p>
               <h3 id="loaded-objects"><a href="#loaded-objects" class="headerlink" title="loaded objects"></a>loaded objects</h3>
@@ -238,7 +238,7 @@
                   </tr>
                 </table>
               </figure>
-              <p><img src="angr1.png" alt=""></p>
+              <p><img src="./angr1.png" alt=""></p>
               <h3 id="Symbolic-Function-Summaries"><a href="#Symbolic-Function-Summaries" class="headerlink" title="Symbolic Function Summaries"></a>Symbolic Function Summaries</h3>
               <p>By default, Project tries to replace external calls to library functions by using symbolic summaries termed <em>SimProcedures</em> -effectively just python functions that imitate the library function’s effect on the state.<br>A whole bunch of functions are implemented as SimProcedures. These builtin procedure are available in <code>angr.SIM_PROCEDURES</code> dictionary, which is two-leveled, keyed first on package name(libc, posix, win32, stubs) and then on the name of the library funciton.</p>
               <h4 id="Hooking"><a href="#Hooking" class="headerlink" title="Hooking"></a>Hooking</h4>
@@ -330,7 +330,7 @@
                   </table>
                 </figure>
               </p>
-              <p><img src="angr2.png" alt=""></p>
+              <p><img src="./angr2.png" alt=""></p>
               <p><strong>warning </strong>： it is not way to convert BVV to python int</p>
               <h2 id="Program-State"><a href="#Program-State" class="headerlink" title="Program State"></a>Program State</h2>
               <p><code>state.regs</code> provides read and write access to the registers through attributes with the names of each register.<br><code>state.mem</code> provides typed read and write access to memory with index-access notation to specify the address followed by an attribute access to specify the type you would like to interpret the memory as.</p>
@@ -1164,18 +1164,18 @@
 
           <nav id="article-nav">
 
-            <a href="/uncategorized/angr-easy-use/" id="article-nav-newer" class="article-nav-link-wrap">
+            <a href="/uncategorized/idrmd/" id="article-nav-newer" class="article-nav-link-wrap">
               <strong class="article-nav-caption">&lt;</strong>
               <div class="article-nav-title">
 
-                Angr_easy_use
+                Idr
 
               </div>
             </a>
 
 
-            <a href="/uncategorized/idrmd/" id="article-nav-older" class="article-nav-link-wrap">
-              <div class="article-nav-title"></div>
+            <a href="/uncategorized/cve2017_5123/" id="article-nav-older" class="article-nav-link-wrap">
+              <div class="article-nav-title">Cve2017_5123</div>
               <strong class="article-nav-caption">&gt;</strong>
             </a>
 
