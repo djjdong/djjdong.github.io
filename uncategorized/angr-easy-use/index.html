@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Angr_easy_use | bubbling</title>
+
+  <!-- keywords -->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="angr’s application1: 利用符号执行探究执行路径，自动解ctf逆向题 　    2：利用angr获取程序控制流（CFG)  　    3：利用angr生成rop链  　    4：利用angr发现漏洞  　    5：利用angr加密程序  　    6：进行污点跟踪 | &amp;lt;6 的版本 angr.state_plugins.posix.SimSystemPosix类，该类的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angr_easy_use">
+<meta property="og:url" content="http://djjdong.github.io/uncategorized/angr-easy-use/index.html">
+<meta property="og:site_name" content="bubbling">
+<meta property="og:description" content="angr’s application1: 利用符号执行探究执行路径，自动解ctf逆向题 　    2：利用angr获取程序控制流（CFG)  　    3：利用angr生成rop链  　    4：利用angr发现漏洞  　    5：利用angr加密程序  　    6：进行污点跟踪 | &amp;lt;6 的版本 angr.state_plugins.posix.SimSystemPosix类，该类的">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-10T14:02:47.310Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Angr_easy_use">
+<meta name="twitter:description" content="angr’s application1: 利用符号执行探究执行路径，自动解ctf逆向题 　    2：利用angr获取程序控制流（CFG)  　    3：利用angr生成rop链  　    4：利用angr发现漏洞  　    5：利用angr加密程序  　    6：进行污点跟踪 | &amp;lt;6 的版本 angr.state_plugins.posix.SimSystemPosix类，该类的">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+
+  <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+  
+</head></html>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">lbb</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">There is no description</p>
+		
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">Home</a></li>
+				        
+							<li><a href="/archives">bubbles</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+						</div>
+					</nav>
+				</section>
+				
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">lbb</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">lbb</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">There is no description</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">Home</a></li>
+		        
+					<li><a href="/archives">bubbles</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-angr-easy-use" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/uncategorized/angr-easy-use/" class="article-date">
+  	<time datetime="2019-03-10T14:01:51.000Z" itemprop="datePublished">2019-03-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Angr_easy_use
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="angr’s-application"><a href="#angr’s-application" class="headerlink" title="angr’s application"></a>angr’s application</h1><pre><code>1: 利用符号执行探究执行路径，自动解ctf逆向题
+</code></pre><p>　    2：利用angr获取程序控制流（CFG)</p>
+<p> 　    3：利用angr生成rop链</p>
+<p> 　    4：利用angr发现漏洞</p>
+<p> 　    5：利用angr加密程序</p>
+<p> 　    6：进行污点跟踪</p>
+<p>| &lt;6 的版本<br> angr.state_plugins.posix.SimSystemPosix类，该类的主要作用是用于模拟符合posix环境的数据存储和输入输出.<br>其中files[0]代表着数据的输入，read_from表示读取输入的数据。第3到第8行对输入的数据进行限制, 最后两行将指针重新指向开头并设置长度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">p = angr.Project(<span class="string">'wyvern'</span>)</span><br><span class="line"> st = p.factory.full_init_state(args=[<span class="string">'./wyvern'</span>], add_options=angr.options.unicorn)</span><br><span class="line"> <span class="keyword">for</span> _ <span class="keyword">in</span> xrange(<span class="number">28</span>):</span><br><span class="line">    k = st.posix.files[<span class="number">0</span>].read_from(<span class="number">1</span>)</span><br><span class="line">    st.solver.add(k != <span class="number">0</span>)</span><br><span class="line">    st.solver.add(k != <span class="number">10</span>)</span><br><span class="line"> k = st.posix.files[<span class="number">0</span>].read_from(<span class="number">1</span>)</span><br><span class="line"> st.solver.add(k == <span class="number">10</span>)</span><br><span class="line"> st.posix.files[<span class="number">0</span>].seek(<span class="number">0</span>)</span><br><span class="line"> st.posix.files[<span class="number">0</span>].length = <span class="number">29</span></span><br></pre></td></tr></table></figure>
+<p>值得注意的功能：</p>
+<ol>
+<li>hook</li>
+<li>angrop</li>
+<li></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/uncategorized/angr-base/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Angr_base</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2019 lbb
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="/js/main.js"></script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>

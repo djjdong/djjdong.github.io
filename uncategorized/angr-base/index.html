@@ -3,22 +3,28 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>bubbling</title>
+  <title>Angr_base | bubbling</title>
 
   <!-- keywords -->
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="There is no description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="bubbling">
-<meta property="og:url" content="http://djjdong.github.io/index.html">
+  <meta name="description" content="Angr’s modules CLE 负责装载二进制对象以及它所依赖的库 ArchInfo 是包含特定于体系结构的信息的类的集合 PyVex 是用了VEX 这个中间语言来分析程序 SimuVEX 是VEX 执行模拟器 它允许你控制符号执行 Clarify 主要专注于将变量符号化，生成约束式并求解约束式 angr以及以上 则是上层封装好的接口   Angr Core concepts CLECLE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angr_base">
+<meta property="og:url" content="http://djjdong.github.io/uncategorized/angr-base/index.html">
 <meta property="og:site_name" content="bubbling">
-<meta property="og:description" content="There is no description">
+<meta property="og:description" content="Angr’s modules CLE 负责装载二进制对象以及它所依赖的库 ArchInfo 是包含特定于体系结构的信息的类的集合 PyVex 是用了VEX 这个中间语言来分析程序 SimuVEX 是VEX 执行模拟器 它允许你控制符号执行 Clarify 主要专注于将变量符号化，生成约束式并求解约束式 angr以及以上 则是上层封装好的接口   Angr Core concepts CLECLE">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr4.png">
+<meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr3.png">
+<meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr1.png">
+<meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr2.png">
+<meta property="og:updated_time" content="2019-03-10T14:02:13.963Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="bubbling">
-<meta name="twitter:description" content="There is no description">
+<meta name="twitter:title" content="Angr_base">
+<meta name="twitter:description" content="Angr’s modules CLE 负责装载二进制对象以及它所依赖的库 ArchInfo 是包含特定于体系结构的信息的类的集合 PyVex 是用了VEX 这个中间语言来分析程序 SimuVEX 是VEX 执行模拟器 它允许你控制符号执行 Clarify 主要专注于将变量符号化，生成约束式并求解约束式 angr以及以上 则是上层封装好的接口   Angr Core concepts CLECLE">
+<meta name="twitter:image" content="http://djjdong.github.io/uncategorized/angr-base/angr4.png">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -117,77 +123,7 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-angr-easy-use" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/uncategorized/angr-easy-use/" class="article-date">
-  	<time datetime="2019-03-10T14:01:51.000Z" itemprop="datePublished">2019-03-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/uncategorized/angr-easy-use/">
-        Angr_easy_use
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="angr’s-application"><a href="#angr’s-application" class="headerlink" title="angr’s application"></a>angr’s application</h1><pre><code>1: 利用符号执行探究执行路径，自动解ctf逆向题
-</code></pre><p>　    2：利用angr获取程序控制流（CFG)</p>
-<p> 　    3：利用angr生成rop链</p>
-<p> 　    4：利用angr发现漏洞</p>
-<p> 　    5：利用angr加密程序</p>
-<p> 　    6：进行污点跟踪</p>
-<p>| &lt;6 的版本<br> angr.state_plugins.posix.SimSystemPosix类，该类的主要作用是用于模拟符合posix环境的数据存储和输入输出.<br>其中files[0]代表着数据的输入，read_from表示读取输入的数据。第3到第8行对输入的数据进行限制, 最后两行将指针重新指向开头并设置长度。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">p = angr.Project(<span class="string">'wyvern'</span>)</span><br><span class="line"> st = p.factory.full_init_state(args=[<span class="string">'./wyvern'</span>], add_options=angr.options.unicorn)</span><br><span class="line"> <span class="keyword">for</span> _ <span class="keyword">in</span> xrange(<span class="number">28</span>):</span><br><span class="line">    k = st.posix.files[<span class="number">0</span>].read_from(<span class="number">1</span>)</span><br><span class="line">    st.solver.add(k != <span class="number">0</span>)</span><br><span class="line">    st.solver.add(k != <span class="number">10</span>)</span><br><span class="line"> k = st.posix.files[<span class="number">0</span>].read_from(<span class="number">1</span>)</span><br><span class="line"> st.solver.add(k == <span class="number">10</span>)</span><br><span class="line"> st.posix.files[<span class="number">0</span>].seek(<span class="number">0</span>)</span><br><span class="line"> st.posix.files[<span class="number">0</span>].length = <span class="number">29</span></span><br></pre></td></tr></table></figure>
-<p>值得注意的功能：</p>
-<ol>
-<li>hook</li>
-<li>angrop</li>
-<li></li>
-</ol>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-angr-base" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-angr-base" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/uncategorized/angr-base/" class="article-date">
@@ -203,15 +139,21 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/uncategorized/angr-base/">
-        Angr_base
-        
-      </a>
+    <h1 class="article-title" itemprop="name">
+      Angr_base
+      
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -956,17 +898,28 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/uncategorized/angr-easy-use/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          Angr_easy_use
+        
+      </div>
+    </a>
+  
+  
+    <a href="/uncategorized/idrmd/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
   
 </article>
 
@@ -975,271 +928,6 @@
 
 
 
-
-  
-    <article id="post-idrmd" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/uncategorized/idrmd/" class="article-date">
-  	<time datetime="2019-02-03T13:47:54.817Z" itemprop="datePublished">2019-02-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="idr机制"><a href="#idr机制" class="headerlink" title="idr机制"></a>idr机制</h1><h2 id="idr介绍"><a href="#idr介绍" class="headerlink" title="idr介绍"></a>idr介绍</h2><p>系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。<br>idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。<br>idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。<br>用到idr机制的主要有：IPC id（消息队列id、信号量id、共享内存id等），磁盘分区id(sda中数字部分）等</p>
-<h2 id="idr-实现"><a href="#idr-实现" class="headerlink" title="idr 实现"></a>idr 实现</h2><p>idr 是由基数树构成，叶节点存储id对应的指针，树干节点不存储数据，每个节点有radix 个子节点，每个叶节点可以存储radix个指针</p>
-<p>根节点、树干节点、叶节点均用 <strong>idr_layer </strong>表示:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span>&#123;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> 		bitmap;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span>	*<span class="title">ary</span>[1&lt;&lt;IDR_BITS];</span></span><br><span class="line"><span class="class">	int 				count;</span></span><br><span class="line"><span class="class">	int 				layer; //distance from leaf</span></span><br><span class="line"><span class="class">	struct rcu_head 	rcu_head;     //用于idr_layer的内存释放</span></span><br><span class="line"><span class="class">&#125;;</span></span><br></pre></td></tr></table></figure></p>
-<p>idr基数树<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">idr</span>&#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span> 	*<span class="title">top</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span> 	*<span class="title">id_free</span>;</span>    <span class="comment">//缓存池链表</span></span><br><span class="line">	<span class="keyword">int</span>					layers;</span><br><span class="line">	<span class="keyword">int</span> 				id_free_cnt;</span><br><span class="line">	<span class="keyword">spinlock_t</span>			lock;        <span class="comment">//idr锁，用于保护基数树</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p><img src="idr_struct.jpg" alt="idr struct"></p>
-<h3 id="宏定义"><a href="#宏定义" class="headerlink" title="宏定义"></a>宏定义</h3><blockquote>
-<p>IDR_BITS：子结点索引位数，5或6；bitmap是long类型，表示子结点个数为sizeof(long)<em>8；long占32位时，可表示32个子结点，则需索引位数为5；long占64位时，则需索引位数为6<br>IDR_SIZE：子结点个数，(1 &lt;&lt; IDR_BITS)<br>IDR_MASK：子结点索引掩码，((1 &lt;&lt; IDR_BITS)-1)<br>MAX_ID_SHIFT：ID空间大小位数，(sizeof(int)</em>8 - 1)；ID空间为0~0x7fffffff，即正整数<br>MAX_LEVEL：表示ID空间所需的层数，(MAX_ID_SHIFT + IDR_BITS - 1) / IDR_BITS；n层基数树表示id空间的个数=IDR_SIZE^n=1&lt;&lt;(n*IDR_BITS)，则表示整个ID空间需要n=roundup(log2(1&lt;&lt;MAX_ID_SHIFT)/IDR_BITS)=(MAX_ID_SHIFT + IDR_BITS - 1) / IDR_BITS层<br>IDR_FREE_MAX：表示idr缓存在分配id过程中所需结点的最大值，MAX_LEVEL + MAX_LEVEL；分配id过程中，可能需要对树进行扩容，如果出现结点为空还要分配结点；比如空树情况，分配一个值为0x7fffffff的id，则首先要扩容MAX_LEVEL个结点，再添加MAX_LEVEL-1个结点后才能正确分配id</p>
-</blockquote>
-<p>…剩下的就看<a href="https://blog.csdn.net/morphad/article/details/9051261" target="_blank" rel="noopener"> https://blog.csdn.net/morphad/article/details/9051261</a><br>有丶复杂</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-cve2017_5123" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/uncategorized/cve2017_5123/" class="article-date">
-  	<time datetime="2019-02-03T02:36:30.000Z" itemprop="datePublished">2019-02-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/uncategorized/cve2017_5123/">
-        Cve2017_5123
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="利用-CVE-2017-5123-本地提权"><a href="#利用-CVE-2017-5123-本地提权" class="headerlink" title="利用 CVE-2017-5123  本地提权"></a>利用 CVE-2017-5123  本地提权</h1><h2 id="description"><a href="#description" class="headerlink" title="description"></a>description</h2><blockquote>
-<p>Chris Salls discovered that the waitid() syscall in Linux kernel v4.13 was refactored, it accidentally stopped checking that the incoming argument was pointing to usersapce. This allowed local attackers to write directly to kernel memory, which lead to <strong>privilege escalation</strong><br>Introduced by this commit:<br><a href="https://git.kernel.org/&gt;linus/4c48abe91be03d191d0c20cc755877da2cb35622" target="_blank" rel="noopener">https://git.kernel.org/&gt;linus/4c48abe91be03d191d0c20cc755877da2cb35622</a></p>
-</blockquote>
-<blockquote>
-<p>Fixed with this commit to mainline tree:<br><a href="https://git.kernel.org/&gt;linus/96ca579a1ecc943b75beba58bebb0356f6cc4b51" target="_blank" rel="noopener">https://git.kernel.org/&gt;linus/96ca579a1ecc943b75beba58bebb0356f6cc4b51</a></p>
-<p>This should be fixed in the -stable free (in the future v4.13.7) soon:<br><a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/log/?h=linux-4.13.y" target="_blank" rel="noopener">https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/log/?h=linux-4.13.y</a></p>
-</blockquote>
-<p>Spolier<br>    <code>int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int optinos);</code></p>
-<blockquote>
-<p>The kernel doesn’t check whether infop is a kernelland or an userland pointer, so we can overwrite memory of any kernel memory page with write permissions. The fun part is that we only control partially what is written.<br>There are more than a thousand ways to exploit this. We decided to turn this write primitive into a null pointer dereference. We overwrote the have_canfork_callback variable in the .BSS section of the kernel. Setting this variable to anything else than 0 (true) will cause an unset callback (null) to be “called on a new task before the process is exposed”.</p>
-</blockquote>
-<h2 id="studying"><a href="#studying" class="headerlink" title="studying"></a>studying</h2><p>内核定义了一系列函数与用户态内存进行交互,包括 copy_from_user,copy_to_user,put_user 等, 这些函数中都会调用 access_ok检查传入的地址是否属于用户区, 之后调用user_access_begin() user_access_end() 分别开启和禁用<strong>smap</strong>, 为了减少检查开销, linux 内核定义了unsafe_put_user函数. 而waitid 在调用前没有进行access_ok 检查，因此可以传入内核地址，导致 任意内核地址写<br>利用条件 会将第一个int 写为0x11，第二个int写为 0。<br>采用的方法是先mmap 0 地址，写入<em>shellcode</em>，再改写 have_canfork_callback 全局变量，将其第一个字节改为0x11，进而执行 未定义的can_fork，即shellcode。<br>因此这次的利用必须关闭了<strong> mmap_min_addr 和smep 保护</strong></p>
-<h3 id="effect-of-vulnerability"><a href="#effect-of-vulnerability" class="headerlink" title="effect of vulnerability"></a>effect of vulnerability</h3><p>漏洞代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE5(waitid, int, which, pid_t, upid, struct siginfo __user *,</span><br><span class="line">                                  infop, int, options, struct rusage __user *, ru)</span><br><span class="line">&#123;</span><br><span class="line">    struct rusage r;</span><br><span class="line">    struct waitid_info info = &#123;.status = 0&#125;;</span><br><span class="line">    long err = kernel_waitid(which, upid, &amp;info, options, ru ? &amp;r : NULL);</span><br><span class="line">    int signo = 0;</span><br><span class="line"></span><br><span class="line">    if (err &gt; 0) &#123;</span><br><span class="line">        signo = SIGCHLD;</span><br><span class="line">        err = 0;</span><br><span class="line">        if (ru &amp;&amp; copy_to_user(ru, &amp;r, sizeof(struct rusage)))</span><br><span class="line">            return -EFAULT;</span><br><span class="line">        &#125;</span><br><span class="line">        if (!infop)</span><br><span class="line">            return err;</span><br><span class="line"></span><br><span class="line">        user_access_begin();</span><br><span class="line">        unsafe_put_user(signo, &amp;infop-&gt;si_signo, Efault);    &lt;-    no access_ok call</span><br><span class="line">        unsafe_put_user(0, &amp;infop-&gt;si_errno, Efault);</span><br><span class="line">        unsafe_put_user(info.cause, &amp;infop-&gt;si_code, Efault);</span><br><span class="line">        unsafe_put_user(info.pid, &amp;infop-&gt;si_pid, Efault);</span><br><span class="line">        unsafe_put_user(info.uid, &amp;infop-&gt;si_uid, Efault);</span><br><span class="line">        unsafe_put_user(info.status, &amp;infop-&gt;si_status, Efault);</span><br><span class="line">        user_access_end();</span><br><span class="line">        return err;</span><br><span class="line">Efault:</span><br><span class="line">        user_access_end();</span><br><span class="line">        return -EFAULT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>waitid函数返回的时候会把信息写在 <code>infop</code> 中, 先看写的内容<br><img src="waitid.png" alt=""><br>从 0x602010 开始</p>
-<p>该漏洞的一个很尴尬的地方在于无法对写入内容（6个不同字段中的任何一个）施予足够控制，<br>info.status 是32 位int， 但被限制在0&lt;status&lt;256。<br>info.pid 可在某种程度上通过反复fork操作进行控制，但最大值为0x8000。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct siginfo&#123;</span><br><span class="line">	int si_signo;</span><br><span class="line">	int si_errno;</span><br><span class="line">	int si_code;</span><br><span class="line">	int padding;</span><br><span class="line">	int pid;</span><br><span class="line">	int uid;</span><br><span class="line">	int status;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="point-of-use"><a href="#point-of-use" class="headerlink" title="point of use"></a>point of use</h3><h4 id="infoleak"><a href="#infoleak" class="headerlink" title="infoleak"></a>infoleak</h4><p>如果开了 kaslr， 需要获取内核基地址<br>unsafe_put_user 有一个很优秀的属性是访问无效代码时不会崩溃，仅返回-EFAULT, 因此，我们仅需猜测内核数据段潜在地址，直至显示不同错误代码、找到内核地址。<br>内核堆探测代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">for(i=(char *)0xffff880000000000;;i+=0x10000000)</span><br><span class="line">&#123;</span><br><span class="line">	pid=fork();</span><br><span class="line">	if(pid&gt;0)</span><br><span class="line">	&#123;</span><br><span class="line">		if(syscall(__NR_waitid，P_PID，pid，(siginfo_t *)i，WEXITED，NULL）&gt;=0)</span><br><span class="line">		&#123;</span><br><span class="line">			printf(&quot;[+] Found %p\n&quot;,i);</span><br><span class="line">			break；</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	else if(pid==0)</span><br><span class="line">	exit(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="linux-内核创建进程的大致流程"><a href="#linux-内核创建进程的大致流程" class="headerlink" title="linux 内核创建进程的大致流程"></a>linux 内核创建进程的大致流程</h4><p>利用的地方主要涉及了fork（）和vfork（）还有clone（）<br>因此 分析一下linux 内核创建一个新进程的过程<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//fork</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __ARCH_WANT_SYS_FORK</span></span><br><span class="line">SYSCALL_DEFINE0(fork)</span><br><span class="line">&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_MMU</span></span><br><span class="line">	<span class="keyword">return</span> do_fork(SIGCHLD, <span class="number">0</span>, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">	<span class="comment">/* can not support in nommu mode */</span></span><br><span class="line">	<span class="keyword">return</span> -EINVAL;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//vfork</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __ARCH_WANT_SYS_VFORK</span></span><br><span class="line">SYSCALL_DEFINE0(vfork)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> do_fork(CLONE_VFORK | CLONE_VM | SIGCHLD, <span class="number">0</span>,</span><br><span class="line">			<span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//clone</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __ARCH_WANT_SYS_CLONE</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_CLONE_BACKWARDS</span></span><br><span class="line">SYSCALL_DEFINE5(clone, <span class="keyword">unsigned</span> <span class="keyword">long</span>, clone_flags, <span class="keyword">unsigned</span> <span class="keyword">long</span>, newsp,</span><br><span class="line">		 <span class="keyword">int</span> __user *, parent_tidptr,</span><br><span class="line">		 <span class="keyword">int</span>, tls_val,</span><br><span class="line">		 <span class="keyword">int</span> __user *, child_tidptr)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> defined(CONFIG_CLONE_BACKWARDS2)</span></span><br><span class="line">SYSCALL_DEFINE5(clone, <span class="keyword">unsigned</span> <span class="keyword">long</span>, newsp, <span class="keyword">unsigned</span> <span class="keyword">long</span>, clone_flags,</span><br><span class="line">		 <span class="keyword">int</span> __user *, parent_tidptr,</span><br><span class="line">		 <span class="keyword">int</span> __user *, child_tidptr,</span><br><span class="line">		 <span class="keyword">int</span>, tls_val)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> defined(CONFIG_CLONE_BACKWARDS3)</span></span><br><span class="line">SYSCALL_DEFINE6(clone, <span class="keyword">unsigned</span> <span class="keyword">long</span>, clone_flags, <span class="keyword">unsigned</span> <span class="keyword">long</span>, newsp,</span><br><span class="line">		<span class="keyword">int</span>, stack_size,</span><br><span class="line">		<span class="keyword">int</span> __user *, parent_tidptr,</span><br><span class="line">		<span class="keyword">int</span> __user *, child_tidptr,</span><br><span class="line">		<span class="keyword">int</span>, tls_val)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">SYSCALL_DEFINE5(clone, <span class="keyword">unsigned</span> <span class="keyword">long</span>, clone_flags, <span class="keyword">unsigned</span> <span class="keyword">long</span>, newsp,</span><br><span class="line">		 <span class="keyword">int</span> __user *, parent_tidptr,</span><br><span class="line">		 <span class="keyword">int</span> __user *, child_tidptr,</span><br><span class="line">		 <span class="keyword">int</span>, tls_val)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> do_fork(clone_flags, newsp, <span class="number">0</span>, parent_tidptr, child_tidptr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure></p>
-<p>可以看出，不管是 fork（），vfork()，还是clone（） 最终都调用了do_fork()实现<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">do_fork</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> clone_flags, <span class="keyword">unsigned</span> <span class="keyword">long</span> stack_start, <span class="keyword">unsigned</span> <span class="keyword">long</span> 					  stack_size, <span class="keyword">int</span> __user * parent_tidptr, <span class="keyword">int</span> __user* child_tidptr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> * <span class="title">p</span>;</span>    <span class="comment">// 创建进程描述符</span></span><br><span class="line">	</span><br><span class="line">	...</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	p = copy_process(clone_flags, stack_start, stack_size, child_tidptr, <span class="literal">NULL</span>, trace);</span><br><span class="line">	<span class="comment">// 复制进程描述符</span></span><br><span class="line">	<span class="keyword">if</span>( !IS_ERR(p))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">completion</span> <span class="title">vfork</span>;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">pid</span> * <span class="title">pid</span>;</span></span><br><span class="line">		trace_sched_process_work(current, p);</span><br><span class="line"></span><br><span class="line">		pid =get_task_pid(p, PIDTYPE_PID);  <span class="comment">//得到新创建的进程描述符的pid </span></span><br><span class="line">		nr = pid_vnr(pid);</span><br><span class="line">		<span class="keyword">if</span>(clone_flags &amp; CLONE_PARENT_SETTID）</span><br><span class="line">			put_user(nr, parent_tidptr);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(clone_flags &amp; CLON_VFORK)    <span class="comment">// 如果调用的是vfork()，初始化vfork完成处理信息</span></span><br><span class="line">		&#123;</span><br><span class="line">			p-&gt;vfork_done= &amp; vfork;</span><br><span class="line">			init_completion(&amp;vfork);</span><br><span class="line">			get_task_struct(p);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		wake_up_new_task(p);	<span class="comment">// 将子进程加入到调度器，为其分配CPU， 准备执行</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(unlikely(trace))</span><br><span class="line">		ptrace_event_pid(trace, pid);  <span class="comment">//fork完成，子进程即将开始运行</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(clone_flags &amp; CLONE_VFORK)  <span class="comment">//如果是vfork， 将父进程加入至 等待队列，等待子进程完成</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span>(!wait_for_vfork_done(p, &amp;vfork))</span><br><span class="line">			ptrace_event_pid(PTRACE_EVENT_VFORK_DONE, pid);</span><br><span class="line">		&#125;</span><br><span class="line">		put_pid(pid);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		nr= PTR_ERR(p);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> nr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>do_fork 流程</p>
-<ol>
-<li>调用copy_process 为子进程复制一份进程信息</li>
-<li>如果是vfork就初始化完成处理信息</li>
-<li>调用wake_up_new_task 将子进程加入调度器，分配CPU</li>
-<li>如果是vfork， 父进程等待子进程完成exec或exit后，替换自己的地址空间</li>
-</ol>
-<p>下面还有一些细致的过程，具体的可以看<a href="http://blog.luoyuanhang.com/2015/07/27/%E5%88%86%E6%9E%90Linux%E5%86%85%E6%A0%B8%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%96%B0%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%BF%87%E7%A8%8B/" title="分析Linux内核创建一个新进程的过程" target="_blank" rel="noopener">http://blog.luoyuanhang.com/2015/07/27/%E5%88%86%E6%9E%90Linux%E5%86%85%E6%A0%B8%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%96%B0%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%BF%87%E7%A8%8B/</a></p>
-<p>新进程的执行源于一下前提：</p>
-<ul>
-<li>dup_task_struct 为其分配新的堆栈</li>
-<li>调用了sched_fork, 将子进程置为TASK_RUNNING</li>
-<li>copy_thread 将父进程的寄存器上下文复制给子进程    （在这里中，fork 会 执行childregs-&gt;rax=0;<br>  因此 子进程返回值是0， 且p-&gt;thread.ip =(unsigned long )ret_from_fork的 首地址<br>  貌似可以劫持进程 ip &gt;_&gt; ）</li>
-</ul>
-<h4 id="想要利用的地方"><a href="#想要利用的地方" class="headerlink" title="想要利用的地方"></a>想要利用的地方</h4><p>fork（）会调用do_fork()， do_fork()会调用 copy_process()，copy_process() 会调用<strong>cgroup_can_fork()</strong><br><img src="cgroup_can_fork.jpeg" alt=""><br><img src="do_each_subsys_mask.jpeg" alt=""><br><img src="for_each_set_bit.jpeg" alt=""></p>
-<p>分析<br>for_each_set_bit 会调用find_first_bit 和find_next_bit， 会搜索传入的have_canfork_callback变量，最终返回值ssid 是位图中小于cgroup_subsys_count的最后一位1的索引值</p>
-<p>cgroup_subsys 是一个全局的cgroup_subsys struct 数组，其中保存了一系列的函数指针，cgroup 需要用户自定义，其can_fork 函数指针为NULL.</p>
-<h3 id="调试过程"><a href="#调试过程" class="headerlink" title="调试过程"></a>调试过程</h3><h4 id="生成kallsyms"><a href="#生成kallsyms" class="headerlink" title="生成kallsyms"></a>生成kallsyms</h4><p>在内核刚起的时候，没有kallsyms， 可以利用下面脚本生成 kallsyms<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">mkdir /proc</span><br><span class="line">mount -t proc none /proc</span><br></pre></td></tr></table></figure></p>
-<p>另外<br><code>grep _text /proc/kallsyms |head -n 1</code><br>可以得到内核基地址</p>
-<h4 id="生成vmlinux文件"><a href="#生成vmlinux文件" class="headerlink" title="生成vmlinux文件"></a>生成vmlinux文件</h4><p>可以用 <code>./extract-linux bzImage &gt;vmlinux</code></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这是第一次弄cve， 涉及内核的知识太jb难了，不仅涉及的知识点很多，而且源码还很难看得懂，看那个cgroup_can_fork 就弄了老久了，而且这只是利用的一个方法，看到至少还有另外两种，还得多加学习</p>
-<p>这次学了很多链接的东西，就记了重要的几个</p>
-<blockquote>
-<p><a href="https://bbs.pediy.com/thread-247014.htm" target="_blank" rel="noopener">https://bbs.pediy.com/thread-247014.htm</a><br><a href="https://bbs.pediy.com/thread-247949.htm" target="_blank" rel="noopener">https://bbs.pediy.com/thread-247949.htm</a><br><a href="https://paper.seebug.org/451/#chrome" target="_blank" rel="noopener">https://paper.seebug.org/451/#chrome</a></p>
-</blockquote>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-hi" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/uncategorized/hi/" class="article-date">
-  	<time datetime="2019-01-28T15:02:46.000Z" itemprop="datePublished">2019-01-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/uncategorized/hi/">
-        Hi
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fun/">fun</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/uncategorized/hello-world/" class="article-date">
-  	<time datetime="2019-01-22T14:30:50.910Z" itemprop="datePublished">2019-01-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/uncategorized/hello-world/">
-        Hello World
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.<br>
-      
-    </p></div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-        <p class="article-more-link">
-          <a href="/uncategorized/hello-world/#more">more >></a>
-        </p>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-  
 </div>
       <footer id="footer">
   <div class="outer">
@@ -1263,8 +951,8 @@
 		fancybox: true,
 		mathjax: true,
 		animate: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
