@@ -1,970 +1,1223 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.8.0">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
-  
+
   <title>Angr_base | bubbling</title>
 
   <!-- keywords -->
-  
+
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Angr’s modules CLE 负责装载二进制对象以及它所依赖的库 ArchInfo 是包含特定于体系结构的信息的类的集合 PyVex 是用了VEX 这个中间语言来分析程序 SimuVEX 是VEX 执行模拟器 它允许你控制符号执行 Clarify 主要专注于将变量符号化，生成约束式并求解约束式 angr以及以上 则是上层封装好的接口   Angr Core concepts CLECLE">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Angr_base">
-<meta property="og:url" content="http://djjdong.github.io/uncategorized/angr-base/index.html">
-<meta property="og:site_name" content="bubbling">
-<meta property="og:description" content="Angr’s modules CLE 负责装载二进制对象以及它所依赖的库 ArchInfo 是包含特定于体系结构的信息的类的集合 PyVex 是用了VEX 这个中间语言来分析程序 SimuVEX 是VEX 执行模拟器 它允许你控制符号执行 Clarify 主要专注于将变量符号化，生成约束式并求解约束式 angr以及以上 则是上层封装好的接口   Angr Core concepts CLECLE">
-<meta property="og:locale" content="default">
-<meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr4.png">
-<meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr3.png">
-<meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr1.png">
-<meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr2.png">
-<meta property="og:updated_time" content="2019-03-10T14:02:13.963Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Angr_base">
-<meta name="twitter:description" content="Angr’s modules CLE 负责装载二进制对象以及它所依赖的库 ArchInfo 是包含特定于体系结构的信息的类的集合 PyVex 是用了VEX 这个中间语言来分析程序 SimuVEX 是VEX 执行模拟器 它允许你控制符号执行 Clarify 主要专注于将变量符号化，生成约束式并求解约束式 angr以及以上 则是上层封装好的接口   Angr Core concepts CLECLE">
-<meta name="twitter:image" content="http://djjdong.github.io/uncategorized/angr-base/angr4.png">
-  
-  
+  <meta name="description" content="Angr’s modules    CLE 负责装载二进制对象以及它所依赖的库   ArchInfo 是包含特定于体系结构的信息的类的集合   PyVex 是用了VEX 这个中间语言来分析程序   SimuVEX 是VEX 执行模拟器 它允许你控制符号执行   Clarify 主要专注于将变量符号化，生成约束式并求解约束式   angr以及以上 则是上层封装好的接口   Angr Core con">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Angr_base">
+  <meta property="og:url" content="http://djjdong.github.io/uncategorized/angr-base/index.html">
+  <meta property="og:site_name" content="bubbling">
+  <meta property="og:description" content="Angr’s modules    CLE 负责装载二进制对象以及它所依赖的库   ArchInfo 是包含特定于体系结构的信息的类的集合   PyVex 是用了VEX 这个中间语言来分析程序   SimuVEX 是VEX 执行模拟器 它允许你控制符号执行   Clarify 主要专注于将变量符号化，生成约束式并求解约束式   angr以及以上 则是上层封装好的接口   Angr Core con">
+  <meta property="og:locale" content="default">
+  <meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr4.png">
+  <meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr3.png">
+  <meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr1.png">
+  <meta property="og:image" content="http://djjdong.github.io/uncategorized/angr-base/angr2.png">
+  <meta property="og:updated_time" content="2019-03-10T14:02:13.963Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Angr_base">
+  <meta name="twitter:description" content="Angr’s modules    CLE 负责装载二进制对象以及它所依赖的库   ArchInfo 是包含特定于体系结构的信息的类的集合   PyVex 是用了VEX 这个中间语言来分析程序   SimuVEX 是VEX 执行模拟器 它允许你控制符号执行   Clarify 主要专注于将变量符号化，生成约束式并求解约束式   angr以及以上 则是上层封装好的接口   Angr Core con">
+  <meta name="twitter:image" content="http://djjdong.github.io/uncategorized/angr-base/angr4.png">
+
+
   <link rel="stylesheet" href="/css/style.css">
-  
-  
+
 
   <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
   <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 
-  
-</head></html>
+
+</head>
+
+</html>
+
 <body>
   <div id="container">
     <div id="particles-js"></div>
     <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="" class="js-avatar">
-			
-		</a>
+      <div class="overlay"></div>
+      <div class="intrude-less">
+        <header id="header" class="inner">
+          <a href="/" class="profilepic">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">lbb</a></h1>
-		</hgroup>
+            <img lazy-src="" class="js-avatar">
 
-		
-		<p class="header-subtitle">There is no description</p>
-		
+          </a>
 
-		
+          <hgroup>
+            <h1 class="header-author"><a href="/">lbb</a></h1>
+          </hgroup>
 
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">Home</a></li>
-				        
-							<li><a href="/archives">bubbles</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-						</div>
-					</nav>
-				</section>
-				
-				
-				
-				
 
-				
-			</div>
-		</div>
-	</header>				
-</div>
+          <p class="header-subtitle">There is no description</p>
+
+
+
+
+          <div class="switch-area">
+            <div class="switch-wrap">
+              <section class="switch-part switch-part1">
+                <nav class="header-menu">
+                  <ul>
+
+                    <li><a href="/">Home</a></li>
+
+                    <li><a href="/archives">bubbles</a></li>
+
+                  </ul>
+                </nav>
+                <nav class="header-nav">
+                  <div class="social">
+
+                  </div>
+                </nav>
+              </section>
+
+
+
+
+
+
+            </div>
+          </div>
+        </header>
+      </div>
     </div>
     <div class="mid-col">
       <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">lbb</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-				<img lazy-src="" class="js-avatar">
-			</div>
-			<hgroup>
-			  <h1 class="header-author">lbb</h1>
-			</hgroup>
-			
-			<p class="header-subtitle">There is no description</p>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">Home</a></li>
-		        
-					<li><a href="/archives">bubbles</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-				</div>
-			</nav>
-		</header>				
-	</div>
-</nav>
-      <div class="body-wrap"><article id="post-angr-base" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/uncategorized/angr-base/" class="article-date">
-  	<time datetime="2019-03-10T14:01:21.000Z" itemprop="datePublished">2019-03-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      Angr_base
-      
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-        
-
-        
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Angr’s-modules"><a href="#Angr’s-modules" class="headerlink" title="Angr’s modules"></a>Angr’s modules</h1><ol>
-<li>CLE 负责装载二进制对象以及它所依赖的库</li>
-<li>ArchInfo 是包含特定于体系结构的信息的类的集合</li>
-<li>PyVex 是用了VEX 这个中间语言来分析程序</li>
-<li>SimuVEX 是VEX 执行模拟器 它允许你控制符号执行</li>
-<li>Clarify 主要专注于将变量符号化，生成约束式并求解约束式</li>
-<li>angr以及以上 则是上层封装好的接口</li>
-</ol>
-<p><img src="angr4.png" alt=""></p>
-<h1 id="Angr-Core-concepts"><a href="#Angr-Core-concepts" class="headerlink" title="Angr Core concepts"></a>Angr Core concepts</h1><p><img src="angr3.png" alt=""></p>
-<h2 id="CLE"><a href="#CLE" class="headerlink" title="CLE"></a>CLE</h2><p><a href="http://angr.io/api-doc/cle.html" target="_blank" rel="noopener">CLE API docs</a></p>
-<h3 id="loaded-objects"><a href="#loaded-objects" class="headerlink" title="loaded objects"></a>loaded objects</h3><p>cle.Loader<br>cle.ELF</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr, monkeyhex</span><br><span class="line"></span><br><span class="line">proj =angr.Project( file name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proj.loader.all_objects</span><br><span class="line">proj.loader.main_object</span><br><span class="line">proj.loader.shared_objects</span><br><span class="line">proj.loader.all_elf_objects</span><br><span class="line">proj.loader.extern_object</span><br><span class="line">proj.loader.kernel_object</span><br><span class="line">proj.loader.find_object_containing(<span class="number">0x400000</span>)</span><br><span class="line"></span><br><span class="line">obj = proj.loader.main_object</span><br><span class="line">obj.entry</span><br><span class="line">obj.segments</span><br><span class="line">obj.sections</span><br><span class="line">obj.min_addr, obj.max_addr</span><br><span class="line">obj.find_segment_containing(obj.entry)</span><br><span class="line">addr = obj.plt[<span class="string">'abort'</span>]</span><br><span class="line">obj.reverse_plt[addr]</span><br><span class="line">obj.linked_base</span><br><span class="line">obj.mapped_base</span><br></pre></td></tr></table></figure>
-<h3 id="Symbols-and-Relocations"><a href="#Symbols-and-Relocations" class="headerlink" title="Symbols and Relocations"></a>Symbols and Relocations</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">malloc = proj.loader.find_symbol(<span class="string">'malloc'</span>)</span><br><span class="line"></span><br><span class="line">malloc.name</span><br><span class="line">malloc.owner_obj </span><br><span class="line">malloc.rebased_addr           <span class="comment">#it is symbol's address in the global address space </span></span><br><span class="line">malloc.linked_addr            <span class="comment">#it is symbol's address relative to the prelinked base of the binary  (maybe is GOT )</span></span><br><span class="line">malloc.relative_addr           <span class="comment">#it is may be used more in windows</span></span><br></pre></td></tr></table></figure>
-<p>Import symbols do not have meaningful addresses associated with them, but they do provide a reference to the symbol that was used to resolve them, as <code>.resolvedby</code></p>
-<p>Export symbols are provided by libc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">malloc.is_export</span><br><span class="line">malloc.is_import</span><br><span class="line"></span><br><span class="line">#On loader, the method is find_symbol because it is not the only one</span><br><span class="line">#On an individual object, the condition is oppsite</span><br><span class="line">main_malloc = proj.loader.main_object.get_symbol(&quot;malloc&quot;)</span><br><span class="line">main_malloc.is_export</span><br><span class="line">main_malloc.is_import</span><br><span class="line">main_malloc.resolvedby</span><br><span class="line"></span><br><span class="line">obj.relocs # it is the full list of relocations for an object</span><br><span class="line">obj.imports #it is a mapping from symbol name to Relocation</span><br><span class="line">#and there is no corresponding list of export symbols</span><br></pre></td></tr></table></figure></p>
-<h3 id="Loading-Options"><a href="#Loading-Options" class="headerlink" title="Loading Options"></a>Loading Options</h3><p><code>auto_load_libs</code><br>it enables or disables CLE’s attempt to automatically resolve shared library dependencies, and is on by default. </p>
-<p><code>except_missing_libs</code><br>if set to true, will cause an exception to be thrown whenever a binary has a shared library dependency that cannot be resolved.</p>
-<p><code>force_load_libs</code> ，  <code>skip_libs</code>   and <code>ld_path</code> should be passed by a list of strings</p>
-<h4 id="Per-Binary-Options"><a href="#Per-Binary-Options" class="headerlink" title="Per-Binary Options"></a>Per-Binary Options</h4><p><code>main_ops</code> and <code>lib_opts</code> can let u specify some options<br><code>main_ops</code> is a mapping from option names to option values<br><code>lib_opts</code> is a mapping from library name to dictionaries mapping option names to option values</p>
-<ul>
-<li>backend -which backend to use, as either a class or a name</li>
-<li>base_addr -a base address to use</li>
-<li>entry_point -an entry point to use</li>
-<li>arch -the name of an architecture to use</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">angr.Project(main_opts=&#123;&apos;backend&apos;: &apos;ida&apos;, &apos;arch&apos;: &apos;i386&apos;&#125;, lib_opts=&#123;&apos;libc.so.6&apos;: &#123;&apos;backend&apos;: &apos;elf&apos;&#125;&#125;)</span><br></pre></td></tr></table></figure>
-<p><img src="angr1.png" alt=""></p>
-<h3 id="Symbolic-Function-Summaries"><a href="#Symbolic-Function-Summaries" class="headerlink" title="Symbolic Function Summaries"></a>Symbolic Function Summaries</h3><p>By default, Project tries to replace external calls to library functions by using symbolic summaries termed <em>SimProcedures</em> -effectively just python functions that imitate the library function’s effect on the state.<br>A whole bunch of functions are implemented as SimProcedures. These builtin procedure are available in <code>angr.SIM_PROCEDURES</code> dictionary, which is two-leveled, keyed first on package name(libc, posix, win32, stubs) and then on the name of the library funciton.</p>
-<h4 id="Hooking"><a href="#Hooking" class="headerlink" title="Hooking"></a>Hooking</h4><p><code>proj.hook(addr, hook)</code> where <code>hook</code> is a SimProcedure instance.<br>and you can manage hooks with <code>.is_hooked</code>, <code>.unhook</code> and <code>.hooked_by</code>,which should hopefully not require explanation.</p>
-<p>Additionally, using <code>proj.hook(addr)</code> as a function decorator can also hook. <code>length</code> keyword argument can make execution jump some number of bytes forward after hook finishes.</p>
-<p>Furthermore, <code>proj.hook_symbol(name, hook)</code></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>stub_func = angr.SIM_PROCEDURES[<span class="string">'stubs'</span>][<span class="string">'ReturnUnconstrained'</span>] <span class="comment"># this is a CLASS</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.hook(<span class="number">0x10000</span>, stub_func())  <span class="comment"># hook with an instance of the class</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.is_hooked(<span class="number">0x10000</span>)            <span class="comment"># these functions should be pretty self-explanitory</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.unhook(<span class="number">0x10000</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.hooked_by(<span class="number">0x10000</span>)</span><br><span class="line">&lt;ReturnUnconstrained&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>@proj.hook(<span class="number">0x20000</span>, length=<span class="number">5</span>)</span><br><span class="line"><span class="meta">... </span><span class="function"><span class="keyword">def</span> <span class="title">my_hook</span><span class="params">(state)</span>:</span></span><br><span class="line"><span class="meta">... </span>    state.regs.rax = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.is_hooked(<span class="number">0x20000</span>)</span><br><span class="line"><span class="keyword">True</span></span><br></pre></td></tr></table></figure>
-<h2 id="Solver-Engine"><a href="#Solver-Engine" class="headerlink" title="Solver Engine"></a>Solver Engine</h2><p>angr can executee with <em>symbolic variables</em>. And then, performing arithmetic operations with that variable will yield a tree of operations (termed an abstract syntax tree or AST)  ASTs can be translated into constraints for an <em>SMT solver</em>, like z3</p>
-<h3 id="Bitvectors"><a href="#Bitvectors" class="headerlink" title="Bitvectors"></a>Bitvectors</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">state= proj.factory.entry_state()</span><br><span class="line"></span><br><span class="line">one = state.solver.BVV(number, len)</span><br><span class="line">one.zero_extend( <span class="number">64</span>-number)  </span><br><span class="line">one.sign_extend( <span class="number">64</span>-number) <span class="comment">#</span></span><br></pre></td></tr></table></figure>
-<p>You can also use <code>claripy</code> to produce the BitVectors<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> claripy</span><br><span class="line">a = claripy.BVV(<span class="number">3</span>,<span class="number">22</span>)</span><br><span class="line">s = claripy.Solver()</span><br><span class="line">s.add(a+<span class="number">5</span>&gt;<span class="number">0</span>)</span><br><span class="line">s.eval(a)</span><br></pre></td></tr></table></figure></p>
-<p>Each AST has a <code>.op</code> and a <code>.args</code>. The op is a string naming the operation being performed, and the args are the values the operation takes as input.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree = (x + <span class="number">1</span>) / (y + <span class="number">2</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree</span><br><span class="line">&lt;BV64 (x_9_64 + <span class="number">0x1</span>) / (y_10_64 + <span class="number">0x2</span>)&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.op</span><br><span class="line"><span class="string">'__div__'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args</span><br><span class="line">(&lt;BV64 x_9_64 + <span class="number">0x1</span>&gt;, &lt;BV64 y_10_64 + <span class="number">0x2</span>&gt;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args[<span class="number">0</span>].op</span><br><span class="line"><span class="string">'__add__'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args[<span class="number">0</span>].args</span><br><span class="line">(&lt;BV64 x_9_64&gt;, &lt;BV64 <span class="number">0x1</span>&gt;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args[<span class="number">0</span>].args[<span class="number">1</span>].op</span><br><span class="line"><span class="string">'BVV'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args[<span class="number">0</span>].args[<span class="number">1</span>].args</span><br><span class="line">(<span class="number">1</span>, <span class="number">64</span>)</span><br></pre></td></tr></table></figure></p>
-<p>from here on out, we can know that <em>any bitvector is a tree of operations</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">state.solver.add( x&gt;y)</span><br><span class="line">state.solver.eval(x)</span><br></pre></td></tr></table></figure>
-<h3 id="Floating-point-numbers"><a href="#Floating-point-numbers" class="headerlink" title="Floating point numbers"></a>Floating point numbers</h3><p>create floating point symbols and values with <code>FPS</code> and <code>FPV</code></p>
-<p>most operations actually have a third parameter, implicitly added when you use the binary operators - the rounding mode. There are multiple rounding modes(round-to-nearest, round-to-zero, round-to-positive, etc). Using the fp operation explicitly (solver.fpAdd for example) with a rounding mode (one of solver.fp.RM_*) as the first argument.</p>
-<p>The methods <code>raw_to_bv</code> and <code>raw_to_fp</code>can interpret BBV as floats and vice versa<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a.raw_to_bv()</span><br><span class="line">a.raw_to_fp()</span><br><span class="line">a.val_to_bv(size)         <span class="comment">#can change the size of bv</span></span><br><span class="line">a.val_to_fp(state.solver.fp.FSORT_FLOAT)</span><br></pre></td></tr></table></figure></p>
-<p><img src="angr2.png" alt=""></p>
-<p><strong>warning </strong>： it is not way to convert BVV to python int</p>
-<h2 id="Program-State"><a href="#Program-State" class="headerlink" title="Program State"></a>Program State</h2><p><code>state.regs</code> provides read and write access to the registers through attributes with the names of each register.<br><code>state.mem</code>  provides typed read and write access to memory with index-access notation to specify the address followed by an attribute access to specify the type you would like to interpret the memory as.</p>
-<ul>
-<li>Use array[index] notation to specify an address</li>
-<li>Use .<type> to specify that the memory should be interpreted as <type> (common values: char, short, int, long, size_t, uint8_t, uint16_t…)</type></type></li>
-<li>From there, you can either:<ul>
-<li>Store a value to it, either a bitvector or a python int</li>
-<li>Use .resolved to get the value as a bitvector</li>
-<li>Use .concrete to get the value as a python int</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># store rdx to memory at 0x1000</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>state.mem[<span class="number">0x1000</span>].uint64_t = state.regs.rdx</span><br><span class="line"></span><br><span class="line"><span class="comment"># dereference rbp</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>state.regs.rbp = state.mem[state.regs.rbp].uint64_t.resolved</span><br><span class="line"></span><br><span class="line"><span class="comment"># add rax, qword ptr [rsp + 8]</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>state.regs.rax += state.mem[state.regs.rsp + <span class="number">8</span>].uint64_t.resolved</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="Basic-Execution"><a href="#Basic-Execution" class="headerlink" title="Basic Execution"></a>Basic Execution</h3><p><code>state.step()</code> will perform one step of symbolic execution and return an object called <code>SimSuceessors</code>, For now, the object has the <code>.successors</code> property.</p>
-<p>Angr’s process of symbolic execution is just the taking the operations of the individual instructions compiled into the program and performing them to mutate a SimState</p>
-<p>use <code>state.posix.stdin.load(0, state.posix.stdin.size)</code> to retrieve a bitvector representing all the content read from stdin.</p>
-<hr>
-<h3 id="State-Presets"><a href="#State-Presets" class="headerlink" title="State Presets"></a>State Presets</h3><ul>
-<li>.blank_state() constructs a “blank slate” blank state, with most of its data left uninitialized.<br>When accessing uninitialized data, an unconstrained symbolic value will be returned.</li>
-<li>.entry_state() constructs a state ready to execute at the main binary’s entry point.</li>
-<li>.full_init_state() constructs a state that is ready to execute through any initializers that need to be run before the main binary’s entry point, for example, shared library constructors or preinitializers.<br>When it is finished with these it will jump to the entry point.</li>
-<li>.call_state(addr, arg1, arg2, …) constructs a state ready to execute a given function.     argN can be a python integer, string, or array, or a bitvector.    And pass a pointer to an object should wrap it in an PointerWrapper, i.e. `angr.PointerWrapper(“point to me”)</li>
-</ul>
-<p>arguments:</p>
-<ul>
-<li><code>addr</code></li>
-<li>a list of arguments of <code>args</code> and a dictionary of environment variables of <code>env</code> into <code>entry_state</code> or <code>full_init_state</code></li>
-<li>you can pass a <code>SimCC</code> instance as the <code>cc</code> argument to specify the calling convention</li>
-</ul>
-<h3 id="Low-level-interface-for-memory"><a href="#Low-level-interface-for-memory" class="headerlink" title="Low level interface for memory"></a>Low level interface for memory</h3><p>The <code>state.mem</code> interface is convenient for loading typed data from memory, but it’s very cumbersome for doing raw loads and stores to and from <strong>ranges of memory</strong>.<br><code>state.mem</code> is actually just a bunch of logic to correctly access the underlying memory storage, which is just a flat address spaca filled with bitvector data -<code>state.memory</code><br>Therefore, we can use <code>.load(addr, size)</code> and <code>.store(addr, size)</code> to control <code>state.memory</code>. </p>
-<p>In addition, the data is in ‘big-endian’ fastion in the <code>state.memory</code>, therefore, you can pass a keyword argument <code>endness</code>, which should be one of the members ofthe <code>Endness</code> enum in the <code>archinfo</code> package.<br>Additionally, the endness of the program being analyzed can be found as <code>arch.memory_endness</code> - for instance <code>state.arch.memory_endness</code>.</p>
-<h3 id="State-Options"><a href="#State-Options" class="headerlink" title="State Options"></a>State Options</h3><p>On each SimState object,there is a set(<code>state.options</code>) of all its enabled options<br>When creating a SimState through any constructor, <code>add_options</code> and <code>remove_options</code> can be passed </p>
-<h3 id="State-Plugins"><a href="#State-Plugins" class="headerlink" title="State Plugins"></a>State Plugins</h3><p>Almost every property on the state is a plugin </p>
-<h4 id="The-globals-plugin"><a href="#The-globals-plugin" class="headerlink" title="The globals plugin"></a>The globals plugin</h4><p><code>state.globals</code> implements the interface of a standard python dict, allowing you to store arbitrary data on a state.</p>
-<h4 id="The-history-plugin"><a href="#The-history-plugin" class="headerlink" title="The history plugin"></a>The history plugin</h4><p><code>state.history</code> is actually a linked list of several history nodes, each one representing a single round of execution- you can traverse this list with<code>state.history.parent.parent</code> etc.</p>
-<p>The history also provides several efficient iterators over the history of certain values.</p>
-<ul>
-<li>history.descriptions is a listing of string descriptions of each of the rounds of execution performed on the state.<br>history.bbl_addrs is a listing of the basic block addresses executed by the state.<br>There may be more than one per round of execution, and not all addresses may correspond to binary code - some may be addresses at which SimProcedures are hooked.</li>
-<li>history.jumpkinds is a listing of the disposition of each of the control flow transitions in the state’s history, as VEX enum strings.<br>history.guards is a listing of the conditions guarding each of the branches that the state has encountered.</li>
-<li>history.events is a semantic listing of “interesting events” which happened during execution, such as the presence of a symbolic jump condition, the program popping up a message box, or execution terminating with an exit code.</li>
-<li>history.actions is usually empty, but if you add the angr.options.refs options to the state, it will be popluated with a log of all the memory, register, and temporary value accesses performed by the program.</li>
-</ul>
-<h4 id="The-callback-plugin"><a href="#The-callback-plugin" class="headerlink" title="The callback plugin"></a>The callback plugin</h4><p>The plugin is a linked list of nodes, but there are no provided iterators over the contents of the nodes - instead you can directly iterate over <code>state.callstack</code> to get the callstack frames for each of the active frames, in order from most recent to oldest. If you just want the topmost frame, this is <code>state.callstack</code>.</p>
-<p>Every call instruction is designed as a frame.</p>
-<ul>
-<li>callstack.func_addr is the address of the function currently being executed</li>
-<li>callstack.call_site_addr is the address of the basic block which called the current function</li>
-<li>callstack.stack_ptr is the value of the stack pointer from the beginning of the current function</li>
-<li>callstack.ret_addr is the location that the current function will return to if it returns</li>
-</ul>
-<h4 id="Copying-and-Merging"><a href="#Copying-and-Merging" class="headerlink" title="Copying and Merging"></a>Copying and Merging</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">s = proj.factory.blank_state()</span><br><span class="line">s1= s.copy()</span><br><span class="line">s2= s.copy()</span><br><span class="line"></span><br><span class="line"><span class="comment"># merge will return a tuple. the first element is the merged state</span></span><br><span class="line"><span class="comment"># the second element is a symbolic variable describing a state flag</span></span><br><span class="line"><span class="comment"># the third element is a boolean describing whether any merging was done</span></span><br><span class="line">(s_merged, m, anything_merged) = s1.merge(s2)</span><br></pre></td></tr></table></figure>
-<h2 id="Simulation-Managers"><a href="#Simulation-Managers" class="headerlink" title="Simulation Managers"></a>Simulation Managers</h2><p>It is the most important control interface in angr.</p>
-<p>States are organized into “stashes”. The default stash for most operations is the <code>active</code> stash, which is where your states get put when you initialize a new simulation manager.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">state =proj.factory.entry_state()</span><br><span class="line">simgr= proj.factory.sigmr(state)</span><br><span class="line"></span><br><span class="line">simgr.step()</span><br><span class="line">sigmr.active        <span class="comment"># active SimStates</span></span><br><span class="line">sigmr.run()</span><br><span class="line"></span><br><span class="line">simgr.move(from_stash=<span class="string">'deadeneded'</span>, to_stash=<span class="string">'authenticated'</span>,filter_func=<span class="keyword">lambda</span> s: <span class="string">b'welcome'</span> <span class="keyword">in</span> s.posix.dumps(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-<p>if you prepend the name of a stash with <code>one_</code>, you will be given the first state in the stash.<br>if you prepend the name of a stash with <code>mp_</code>, u will be given a <a href="https://github.com/zardus/mulpyplexer" target="_blank" rel="noopener">mulpylexed </a>version of the stash</p>
-<h3 id="Stash-types"><a href="#Stash-types" class="headerlink" title="Stash types"></a>Stash types</h3><table>
-<thead>
-<tr>
-<th>Stash</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>active</td>
-<td>This stash contains the states that will be stepped by default, unless an alternate stash is specified.</td>
-</tr>
-<tr>
-<td>deadended</td>
-<td>A state goes to the deadended stash when it cannot continue the execution for some reason, including no more valid instructions, unsat state of all of its successors, or an invalid instruction pointer.</td>
-</tr>
-<tr>
-<td>pruned</td>
-<td>When using LAZY_SOLVES, states are not checked for satisfiability unless absolutely necessary. When a state is found to be unsat in the presence of LAZY_SOLVES, the state hierarchy is traversed to identify when, in its history, it initially became unsat. All states that are descendants of that point (which will also be unsat, since a state cannot become un-unsat) are pruned and put in this stash.</td>
-</tr>
-<tr>
-<td>unconstrained</td>
-<td>If the save_unconstrained option is provided to the SimulationManager constructor, states that are determined to be unconstrained (i.e., with the instruction pointer controlled by user data or some other source of symbolic data) are placed here.</td>
-</tr>
-<tr>
-<td>unsat</td>
-<td>If the save_unsat option is provided to the SimulationManager constructor, states that are determined to be unsatisfiable (i.e., they have constraints that are contradictory, like the input having to be both “AAAA” and “BBBB” at the same time) are placed here.</td>
-</tr>
-<tr>
-<td>errrored</td>
-<td>if during execution, an error is raised, then the state will be wrapped in an <code>ErrorRecord</code> object, which contains the state and the error it raised, and then the <strong>record</strong> will be inserted into errored.<code>record.error</code> is the error, and you can launch a debug shell with <code>record.debug()</code></td>
-</tr>
-<tr>
-<td>found</td>
-<td>Any of the states in the active stash match the <code>find</code> condition and execution terminates</td>
-</tr>
-<tr>
-<td>avoided</td>
-<td>Any of the states matches the condition, and execution continues</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Exploration-Techniques"><a href="#Exploration-Techniques" class="headerlink" title="Exploration Techniques"></a>Exploration Techniques</h3><p><em>exploration techniques</em> can customize the behavior of a simulation manager by using <code>simgr.use_technique(tech)</code>, where tech is an instance of an ExplorationTechnique subclass.<br>angr’s built-in exploration techniques can be found under <code>angr.exploration_techniquves</code>.</p>
-<ul>
-<li>DFS: Depth first search, as mentioned earlier. Keeps only one state active at once, putting the rest in the <code>deferred</code> stash until it deadends or errors.</li>
-<li>Explorer: This technique implements the .explore() functionality, allowing you to search for and avoid addresses.</li>
-<li>LengthLimiter: Puts a cap on the maximum length of the path a state goes through.</li>
-<li>LoopSeer: Uses a reasonable approximation of loop counting to discard states that appear to be going through a loop too many times, putting them in a <code>spinning</code> stash and pulling them out again if we run out of otherwise viable states.</li>
-<li>ManualMergepoint: Marks an address in the program as a merge point, so states that reach that address will be briefly held, and any other states that reach that same point within a timeout will be merged together.</li>
-<li>MemoryWatcher: Monitors how much memory is free/available on the system between simgr steps and stops exploration if it gets too low.</li>
-<li>Oppologist: The “operation apologist” is an especially fun gadget - if this technique is enabled and angr encounters an unsupported instruction, for example a bizzare and foreign floating point SIMD op, it will concretize all the inputs to that instruction and emulate the single instruction using the unicorn engine, allowing execution to continue.</li>
-<li>Spiller: When there are too many states active, this technique can dump some of them to disk in order to keep memory consumption low.<br>Threading: Adds thread-level parallelism to the stepping process. This doesn’t help much because of python’s global interpreter locks, but if you have a program whose analysis spends a lot of time in angr’s native-code dependencies (unicorn, z3, libvex) you can seem some gains.</li>
-<li>Tracer: An exploration technique that causes execution to follow a dynamic trace recorded from some other source. The dynamic tracer repository has some tools to generate those traces.</li>
-<li>Veritesting: An implementation of a CMU paper on automatically identifying useful merge points. This is so useful, you can enable it automatically with veritesting=True in the SimulationManager constructor! Note that it frequenly doesn’t play nice with other techniques due to the invasive way it implements static symbolic execution.</li>
-</ul>
-<h2 id="Execution-Engines"><a href="#Execution-Engines" class="headerlink" title="Execution Engines"></a>Execution Engines</h2><p>angr uses a series of engines(subclasses of the <code>SimEngine</code> class) to emulate the effects. The sequence of engines is: </p>
-<ol>
-<li>failure engine</li>
-<li>syscall engine</li>
-<li>hook    engine</li>
-<li>unicorn engine (when the <code>UNICORN</code> state option is enabled and there is no symbolic data in this state)</li>
-<li>VEX     engine</li>
-</ol>
-<h3 id="SimSuccessors"><a href="#SimSuccessors" class="headerlink" title="SimSuccessors"></a>SimSuccessors</h3><p>The purpose of SimSuccessors is to perform a simple categorization of the successor states, stored in various list attributes.</p>
-<table>
-<thead>
-<tr>
-<th>Attribute</th>
-<th>Guard Condition</th>
-<th>Instruction Pointer</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>successors</td>
-<td>True (can be symbolic, but constrained to True)</td>
-<td>Can be symbolic (but 256 solutions or less; see unconstrained_successssors).</td>
-<td>A normal, satisfiable successor state to the state processed by the engine. The instruction pointer of this state may be symbolic (i.e., a computed jump based on user input), so the state might actually represent several potential continuations of execution going forward.</td>
-</tr>
-<tr>
-<td>unsat_successors</td>
-<td>False (can be symbolic, but constrained to False).</td>
-<td>Can be symbolic.</td>
-<td>Unsatisfiable successors. These are successors whose guard conditions can only be false (i.e., jumps that cannot be taken, or the default branch of jumps that must be taken).</td>
-</tr>
-<tr>
-<td>flat_successors</td>
-<td>True (can be symbolic, but constrained to True).</td>
-<td>Concrete value.</td>
-<td>As noted above, states in the successors list can have symbolic instruction pointers. This is rather confusing, as elsewhere in the code (i.e., in SimEngineVEX.process, when it’s time to step that state forward), we make assumptions that a single program state only represents the execution of a single spot in the code. To alleviate this, when we encounter states in successors with symbolic instruction pointers, we compute all possible concrete solutions (up to an arbitrary threshold of 256) for them, and make a copy of the state for each such solution. We call this process “flattening”. These flat_successors are states, each of which has a different, concrete instruction pointer. For example, if the instruction pointer of a state in successors was X+5, where X had constraints of X &gt; 0x800000 and X &lt; 0x800010, we would flatten it into 16 different flat_successors states, one with an instruction pointer of 0x800006, one with 0x800007, and so on until 0x800015.</td>
-</tr>
-<tr>
-<td>unconstrained_successors</td>
-<td>True (can be symbolic, but constrained to True).</td>
-<td>Symbolic (with more than 256 solutions).</td>
-<td>During the flattening procedure described above, if it turns out that there are more than 256 possible solutions for the instruction pointer, we assume that the instruction pointer has been overwritten with unconstrained data (i.e., a stack overflow with user data). This assumption is not sound in general. Such states are placed in unconstrained_successors and not in successors.</td>
-</tr>
-<tr>
-<td>all_successors</td>
-<td>Anything</td>
-<td>Can be symbolic.</td>
-<td>This is successors + unsat_successors + unconstrained_successors.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Breakpoints"><a href="#Breakpoints" class="headerlink" title="Breakpoints"></a>Breakpoints</h3><table>
-<thead>
-<tr>
-<th>Event type</th>
-<th>Event meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>mem_read</td>
-<td>Memory is being read.</td>
-</tr>
-<tr>
-<td>mem_write</td>
-<td>Memory is being written.</td>
-</tr>
-<tr>
-<td>reg_read</td>
-<td>A register is being read.</td>
-</tr>
-<tr>
-<td>reg_write</td>
-<td>A register is being written.</td>
-</tr>
-<tr>
-<td>tmp_read</td>
-<td>A temp is being read.</td>
-</tr>
-<tr>
-<td>tmp_write</td>
-<td>A temp is being written.</td>
-</tr>
-<tr>
-<td>expr</td>
-<td>An expression is being created (i.e., a result of an arithmetic operation or a constant in the IR).</td>
-</tr>
-<tr>
-<td>statement</td>
-<td>An IR statement is being translated.</td>
-</tr>
-<tr>
-<td>instruction</td>
-<td>A new (native) instruction is being translated.</td>
-</tr>
-<tr>
-<td>irsb</td>
-<td>A new basic block is being translated.</td>
-</tr>
-<tr>
-<td>constraints</td>
-<td>New constraints are being added to the state.</td>
-</tr>
-<tr>
-<td>exit</td>
-<td>A successor is being generated from execution.</td>
-</tr>
-<tr>
-<td>symbolic_variable</td>
-<td>A new symbolic variable is being created.</td>
-</tr>
-<tr>
-<td>call</td>
-<td>A call instruction is hit.</td>
-</tr>
-<tr>
-<td>address_concretization</td>
-<td>A symbolic memory access is being resolved.</td>
-</tr>
-</tbody>
-</table>
-<p>There events expose different attributes</p>
-<table>
-<thead>
-<tr>
-<th>Event type</th>
-<th>Attribute name</th>
-<th>Attribute availability</th>
-<th>Attribute meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>mem_read</td>
-<td>mem_read_address</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The address at which memory is being read.</td>
-</tr>
-<tr>
-<td>mem_read</td>
-<td>mem_read_length</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The length of the memory read.</td>
-</tr>
-<tr>
-<td>mem_read</td>
-<td>mem_read_expr</td>
-<td>BP_AFTER</td>
-<td>The expression at that address.</td>
-</tr>
-<tr>
-<td>mem_write</td>
-<td>mem_write_address</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The address at which memory is being written.</td>
-</tr>
-<tr>
-<td>mem_write</td>
-<td>mem_write_length</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The length of the memory write.</td>
-</tr>
-<tr>
-<td>mem_write</td>
-<td>mem_write_expr</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The expression that is being written.</td>
-</tr>
-<tr>
-<td>reg_read</td>
-<td>reg_read_offset</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The offset of the register being read.</td>
-</tr>
-<tr>
-<td>reg_read</td>
-<td>reg_read_length</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The length of the register read.</td>
-</tr>
-<tr>
-<td>reg_read</td>
-<td>reg_read_expr</td>
-<td>BP_AFTER</td>
-<td>The expression in the register.</td>
-</tr>
-<tr>
-<td>reg_write</td>
-<td>reg_write_offset</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The offset of the register being written.</td>
-</tr>
-<tr>
-<td>reg_write</td>
-<td>reg_write_length</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The length of the register write.</td>
-</tr>
-<tr>
-<td>reg_write</td>
-<td>reg_write_expr</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The expression that is being written.</td>
-</tr>
-<tr>
-<td>tmp_read</td>
-<td>tmp_read_num</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The number of the temp being read.</td>
-</tr>
-<tr>
-<td>tmp_read</td>
-<td>tmp_read_expr</td>
-<td>BP_AFTER</td>
-<td>The expression of the temp.</td>
-</tr>
-<tr>
-<td>tmp_write</td>
-<td>tmp_write_num</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The number of the temp written.</td>
-</tr>
-<tr>
-<td>tmp_write</td>
-<td>tmp_write_expr</td>
-<td>BP_AFTER</td>
-<td>The expression written to the temp.</td>
-</tr>
-<tr>
-<td>expr</td>
-<td>expr</td>
-<td>BP_AFTER</td>
-<td>The value of the expression.</td>
-</tr>
-<tr>
-<td>statement</td>
-<td>statement</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The index of the IR statement (in the IR basic block).</td>
-</tr>
-<tr>
-<td>instruction</td>
-<td>instruction</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The address of the native instruction.</td>
-</tr>
-<tr>
-<td>irsb</td>
-<td>address</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The address of the basic block.</td>
-</tr>
-<tr>
-<td>constraints</td>
-<td>added_constraints</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The list of constraint expressions being added.</td>
-</tr>
-<tr>
-<td>call</td>
-<td>function_address</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The name of the function being called.</td>
-</tr>
-<tr>
-<td>exit</td>
-<td>exit_target</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The expression representing the target of a SimExit.</td>
-</tr>
-<tr>
-<td>exit</td>
-<td>exit_guard</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The expression representing the guard of a SimExit.</td>
-</tr>
-<tr>
-<td>exit</td>
-<td>exit_jumpkind</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The expression representing the kind of SimExit.</td>
-</tr>
-<tr>
-<td>symbolic_variable</td>
-<td>symbolic_name</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The name of the symbolic variable being created. The solver engine might modify this name (by appending a unique ID and length). Check the symbolic_expr for the final symbolic expression.</td>
-</tr>
-<tr>
-<td>symbolic_variable</td>
-<td>symbolic_size</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The size of the symbolic variable being created.</td>
-</tr>
-<tr>
-<td>symbolic_variable</td>
-<td>symbolic_expr</td>
-<td>BP_AFTER</td>
-<td>The expression representing the new symbolic variable.</td>
-</tr>
-<tr>
-<td>address_concretization</td>
-<td>address_concretization_strategy</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The SimConcretizationStrategy being used to resolve the address. This can be modified by the breakpoint handler to change the strategy that will be applied. If your breakpoint handler sets this to None, this strategy will be skipped.</td>
-</tr>
-<tr>
-<td>address_concretization</td>
-<td>address_concretization_action</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The SimAction object being used to record the memory action.</td>
-</tr>
-<tr>
-<td>address_concretization</td>
-<td>address_concretization_memory</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The SimMemory object on which the action was taken.</td>
-</tr>
-<tr>
-<td>address_concretization</td>
-<td>address_concretization_expr</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>The AST representing the memory index being resolved. The breakpoint handler can modify this to affect the address being resolved.</td>
-</tr>
-<tr>
-<td>address_concretization</td>
-<td>address_concretization_add_constraints</td>
-<td>BP_BEFORE or BP_AFTER</td>
-<td>Whether or not constraints should/will be added for this read.</td>
-</tr>
-<tr>
-<td>address_concretization</td>
-<td>address_concretization_result</td>
-<td>BP_AFTER</td>
-<td>The list of resolved memory addresses (integers). The breakpoint handler can overwrite these to effect a different resolution result.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Caution-about-mem-read-breakpoint"><a href="#Caution-about-mem-read-breakpoint" class="headerlink" title="Caution about mem_read breakpoint"></a>Caution about <code>mem_read</code> breakpoint</h3><p>The <code>mem_read</code> breakpoints gets triggered anytime there are memory reads by either the executing program or the binary analysis. If you are using breakpoint on <code>mem_read</code> and also using <code>state.men</code> to load data from memory addresses, then know that the breakpoint will be fired.<br>The solution of this problem is using <code>state.memory.load</code> with the keyword arguments <code>disable_actions=True</code> and <code>inspect=False</code>.</p>
-<hr>
-<h1 id="Simple-application"><a href="#Simple-application" class="headerlink" title="Simple application"></a>Simple application</h1><p>There are three ways to control the program’s input.</p>
-<ul>
-<li>args</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> claripy</span><br><span class="line"></span><br><span class="line">args=claripy.BVS(<span class="string">'args'</span>,size)</span><br><span class="line">state= prog.factory.entry_state(args=args)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>place in <code>posix</code></li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">p = angr.Project(<span class="string">'wyvern'</span>)</span><br><span class="line"></span><br><span class="line">st = p.factory.full_init_state(args=[<span class="string">'./wyvern'</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># Constrain the first 28 bytes to be non-null and non-newline:</span></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> xrange(<span class="number">28</span>):</span><br><span class="line">    k = st.posix.files[<span class="number">0</span>].read_from(<span class="number">1</span>)</span><br><span class="line">    st.se.add(k != <span class="number">0</span>)</span><br><span class="line">    st.se.add(k != <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Constrain the last byte to be a newline</span></span><br><span class="line">k = st.posix.files[<span class="number">0</span>].read_from(<span class="number">1</span>)</span><br><span class="line">st.se.add(k == <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Reset the symbolic stdin's properties and set its length.</span></span><br><span class="line">st.posix.files[<span class="number">0</span>].seek(<span class="number">0</span>)</span><br><span class="line">st.posix.files[<span class="number">0</span>].length = <span class="number">29</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>place in where are the args at</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"></span><br><span class="line">p = angr.Project(<span class="string">'./vul'</span>, load_options=&#123;<span class="string">"auto_load_libs"</span>: <span class="keyword">False</span>&#125;)</span><br><span class="line">s = p.factory.blank_state(addr=<span class="number">0x80485c8</span>)</span><br><span class="line"></span><br><span class="line">bv = s.BV(<span class="string">'toMemory'</span>, <span class="number">8</span>*<span class="number">4</span>)</span><br><span class="line">s.se.add(bv &gt; <span class="number">1000</span>)</span><br><span class="line">s.memory.store(<span class="number">0x08049b80</span>, bv.reversed)</span><br><span class="line"></span><br><span class="line">pg = p.factory.path_group(s, immutable=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="Built-in-Analyses"><a href="#Built-in-Analyses" class="headerlink" title="Built-in Analyses"></a>Built-in Analyses</h1><h2 id="CFG"><a href="#CFG" class="headerlink" title="CFG"></a>CFG</h2><p>CFGFast uses static analysis to generate a CFG. And CFGEmulated uses symbolic execution to capture the CFG.<br>CFG, at it’s core, is a <a href="https://networkx.github.io/" target="_blank" rel="noopener">NetworkX</a> di-gragh. This means that all of the normal NetworkX APIs are available.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">cfg = p.analyses.CFGFast()</span><br><span class="line">cfg = p.analyses.CFGEumlated(keep_state=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"This is the graph:"</span>, cfg.graph)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"It has %d nodes and %d edges"</span> % (len(cfg.graph.nodes()), len(cfg.graph.edges())))</span><br><span class="line">&gt;</span><br><span class="line"><span class="comment"># this grabs *any* node at a given location:</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>entry_node = cfg.get_any_node(p.entry)</span><br><span class="line"></span><br><span class="line"><span class="comment"># on the other hand, this grabs all of the nodes</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"There were %d contexts for the entry block"</span> % len(cfg.get_all_nodes(p.entry)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># we can also look up predecessors and successors</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Predecessors of the entry point:"</span>, entry_node.predecessors)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Successors of the entry point:"</span>, entry_node.successors)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Successors (and type of jump) of the entry point:"</span>, [ jumpkind + <span class="string">" to "</span> + str(node.addr) <span class="keyword">for</span> node,jumpkind <span class="keyword">in</span> cfg.get_successors_and_jumpkind(entry_node) ])</span><br></pre></td></tr></table></figure>
-<p>[+] Viewing angr CFGs can be found in <a href="https://github.com/axt/angr-utils" target="_blank" rel="noopener">axt’s angr-utils repository</a>.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"><span class="keyword">from</span> angrutils <span class="keyword">import</span> *</span><br><span class="line">proj = angr.Project(<span class="string">"&lt;...&gt;/ais3_crackme"</span>, load_options=&#123;<span class="string">'auto_load_libs'</span>:<span class="keyword">False</span>&#125;)</span><br><span class="line">main = proj.loader.main_object.get_symbol(<span class="string">"main"</span>)</span><br><span class="line">start_state = proj.factory.blank_state(addr=main.rebased_addr)</span><br><span class="line">cfg = proj.analyses.CFGEmulated(fail_fast=<span class="keyword">True</span>, starts=[main.rebased_addr], initial_state=start_state)</span><br><span class="line">plot_cfg(cfg, <span class="string">"ais3_cfg"</span>, asminst=<span class="keyword">True</span>, remove_imports=<span class="keyword">True</span>, remove_path_terminator=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
-<p>[+] also can use metplotlib to draw<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"></span><br><span class="line">matplotlib.use(<span class="string">'Agg'</span>)</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">nx.draw(cfg.graph)</span><br><span class="line">plt.savefig(<span class="string">'temp.png'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>warning: Loading shared libraries is usually useless. Therefore, should add <code>load_options={&#39;auto_load_libs&#39;:False}</code> to the <code>Project</code> constructor. </p>
-<h3 id="Function-Manager"><a href="#Function-Manager" class="headerlink" title="Function Manager"></a>Function Manager</h3><p>The CFG result produces an object called the <em>Function Manager</em>, accessible through <code>cfg.kb.functions</code>.</p>
-<p>Functions have several important properties!</p>
-<ul>
-<li><code>entry_func.block_addrs</code> is a set of addresses at which basic blocks belonging to the function begin.</li>
-<li><code>entry_func.blocks</code> is the set of basic blocks belonging to the function, that you can explore and disassemble using capstone.</li>
-<li><code>entry_func.string_references()</code> returns a list of all the constant strings that were referred to at any point in the function.<br>They are formatted as <code>(addr, string)</code> tuples, where addr is the address in the binary’s data section the string lives, and string is a python string that contains the value of the string.</li>
-<li><code>entry_func.returning</code> is a boolean value signifying whether or not the function can return.<br><code>False</code> indicates that all paths do not return.</li>
-<li><code>entry_func.callable</code> is an angr Callable object referring to this function.<br>You can call it like a python function with python arguments and get back an actual result (may be symbolic) as if you ran the function with those arguments!</li>
-<li><code>entry_func.transition_graph</code> is a NetworkX DiGraph describing control flow within the function itself. It resembles the control-flow graphs IDA displays on a per-function level.</li>
-<li><code>entry_func.name</code> is the name of the function.</li>
-<li><code>entry_func.has_unresolved_calls</code> and <code>entry.has_unresolved_jumps</code> have to do with detecting imprecision within the CFG.<br>Sometimes, the analysis cannot detect what the possible target of an indirect call or jump could be.<br>If this occurs within a function, that function will have the appropriate <code>has_unresolved_*</code> value set to <code>True</code>.</li>
-<li><code>entry_func.get_call_sites()</code> returns a list of all the addresses of basic blocks which end in calls out to other functions.</li>
-<li><code>entry_func.get_call_target(callsite_addr)</code> will, given <code>callsite_addr</code> from the list of call site addresses, return where that callsite will call out to.</li>
-<li><code>entry_func.get_call_return(callsite_addr)</code> will, given <code>callsite_addr</code> from the list of call site addresses, return where that callsite should return to.</li>
-</ul>
-<h3 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h3><p>These are the most useful options when working with CFGFast:</p>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>force_complete_scan</td>
-<td>(Default: True) Treat the entire binary as code for the purposes of function detection.  If you have a blob (e.g., mixed code and data) <em>you want to turn this off</em>.</td>
-</tr>
-<tr>
-<td>function_starts</td>
-<td>A list of addresses, to use as entry points into the analysis.</td>
-</tr>
-<tr>
-<td>normalize</td>
-<td>Normalize the resulting functions (e.g., each basic block belongs to at most one function)</td>
-</tr>
-<tr>
-<td>collect_data_references</td>
-<td>Find all references to data during CFG generation. The results can allow you to find cross-references to data.</td>
-</tr>
-<tr>
-<td>resolve_indirect_jumps</td>
-<td>Perform additional analysis to attempt to find targets for every indirect jump found during CFG creation.</td>
-</tr>
-<tr>
-<td>more!</td>
-<td>Examine the docstring on p.analyses.CFGFast for more up-to-date options</td>
-</tr>
-</tbody>
-</table>
-<h2 id="CFGEmulated-details"><a href="#CFGEmulated-details" class="headerlink" title="CFGEmulated details"></a>CFGEmulated details</h2><p>The most common options for CFGEmulated include:</p>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>context_sensitivity_level</td>
-<td>This sets the context sensitivity level of the analysis. See the context sensitivity level section below for more information. This is 1 by default.</td>
-</tr>
-<tr>
-<td>starts</td>
-<td>A list of addresses, to use as entry points into the analysis.</td>
-</tr>
-<tr>
-<td>avoid_runs</td>
-<td>A list of addresses to ignore in the analysis.</td>
-</tr>
-<tr>
-<td>call_depth</td>
-<td>Limit the depth of the analysis to some number calls. This is useful for checking which functions a specific function can directly jump to (by setting <code>call_depth</code> to 1).</td>
-</tr>
-<tr>
-<td>initial_state</td>
-<td>An initial state can be provided to the CFG, which it will use throughout its analysis.</td>
-</tr>
-<tr>
-<td>keep_state</td>
-<td>To save memory, the state at each basic block is discarded by default. If <code>keep_state</code> is True, the state is saved in the CFGNode.</td>
-</tr>
-<tr>
-<td>enable_symbolic_back_traversal</td>
-<td>Whether to enable an intensive technique for resolving indirect jumps</td>
-</tr>
-<tr>
-<td>enable_advanced_backward_slicing</td>
-<td>Whether to enable another intensive technique for resolving direct jumps</td>
-</tr>
-<tr>
-<td>more!</td>
-<td>Examine the docstring on p.analyses.CFGEmulated for more up-to-date options</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1><h2 id="List-of-Claripy-Operations"><a href="#List-of-Claripy-Operations" class="headerlink" title="List of Claripy Operations"></a>List of Claripy Operations</h2><h3 id="Arithmetic-and-Logic"><a href="#Arithmetic-and-Logic" class="headerlink" title="Arithmetic and Logic"></a>Arithmetic and Logic</h3><table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Description</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>LShR</td>
-<td>Logically shifts an expression to the right. (the default shifts are arithmetic)</td>
-<td><code>x.LShR(10)</code></td>
-</tr>
-<tr>
-<td>RotateLeft</td>
-<td>Rotates an expression left</td>
-<td><code>x.RotateLeft(8)</code></td>
-</tr>
-<tr>
-<td>RotateRight</td>
-<td>Rotates an expression right</td>
-<td><code>x.RotateRight(8)</code></td>
-</tr>
-<tr>
-<td>And</td>
-<td>Logical And (on boolean expressions)</td>
-<td><code>solver.And(x == y, x &gt; 0)</code></td>
-</tr>
-<tr>
-<td>Or</td>
-<td>Logical Or (on boolean expressions)</td>
-<td><code>solver.Or(x == y, y &lt; 10)</code></td>
-</tr>
-<tr>
-<td>Not</td>
-<td>Logical Not (on a boolean expression)</td>
-<td><code>solver.Not(x == y)</code> is the same as <code>x != y</code></td>
-</tr>
-<tr>
-<td>If</td>
-<td>An If-then-else</td>
-<td>Choose the maximum of two expressions: <code>solver.If(x &gt; y, x, y)</code></td>
-</tr>
-<tr>
-<td>ULE</td>
-<td>Unsigned less than or equal to</td>
-<td>Check if x is less than or equal to y: <code>x.ULE(y)</code></td>
-</tr>
-<tr>
-<td>ULT</td>
-<td>Unsigned less than</td>
-<td>Check if x is less than y: <code>x.ULT(y)</code></td>
-</tr>
-<tr>
-<td>UGE</td>
-<td>Unsigned greater than or equal to</td>
-<td>Check if x is greater than or equal to y: <code>x.UGE(y)</code></td>
-</tr>
-<tr>
-<td>UGT</td>
-<td>Unsigned greater than</td>
-<td>Check if x is greater than y: <code>x.UGT(y)</code></td>
-</tr>
-<tr>
-<td>SLE</td>
-<td>Signed less than or equal to</td>
-<td>Check if x is less than or equal to y: <code>x.SLE(y)</code></td>
-</tr>
-<tr>
-<td>SLT</td>
-<td>Signed less than</td>
-<td>Check if x is less than y: <code>x.SLT(y)</code></td>
-</tr>
-<tr>
-<td>SGE</td>
-<td>Signed greater than or equal to</td>
-<td>Check if x is greater than or equal to y: <code>x.SGE(y)</code></td>
-</tr>
-<tr>
-<td>SGT</td>
-<td>Signed greater than</td>
-<td>Check if x is greater than y: <code>x.SGT(y)</code></td>
-</tr>
-</tbody>
-</table>
-<p>TODO: Add the floating point ops</p>
-<h3 id="Bitvector-Manipulation"><a href="#Bitvector-Manipulation" class="headerlink" title="Bitvector Manipulation"></a>Bitvector Manipulation</h3><table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Description</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SignExt</td>
-<td>Pad a bitvector on the left with <code>n</code> sign bits</td>
-<td><code>x.sign_extend(n)</code></td>
-</tr>
-<tr>
-<td>ZeroExt</td>
-<td>Pad a bitvector on the left with <code>n</code> zero bits</td>
-<td><code>x.zero_extend(n)</code></td>
-</tr>
-<tr>
-<td>Extract</td>
-<td>Extracts the given bits (zero-indexed from the <em>right</em>, inclusive) from an expression.</td>
-<td>Extract the least significant byte of x: <code>x[7:0]</code></td>
-</tr>
-<tr>
-<td>Concat</td>
-<td>Concatenates any number of expressions together into a new expression.</td>
-<td><code>x.concat(y, ...)</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="Extra-Functionality"><a href="#Extra-Functionality" class="headerlink" title="Extra Functionality"></a>Extra Functionality</h3><p>There’s a bunch of prepackaged behavior that you <em>could</em> implement by analyzing the ASTs and composing sets of operations, but here’s an easier way to do it:</p>
-<ul>
-<li>You can chop a bitvector into a list of chunks of <code>n</code> bits with <code>val.chop(n)</code></li>
-<li>You can endian-reverse a bitvector with <code>x.reversed</code></li>
-<li>You can get the width of a bitvector in bits with <code>val.length</code></li>
-<li>You can test if an AST has any symbolic components with <code>val.symbolic</code></li>
-<li>You can get a set of the names of all the symbolic variables implicated in the construction of an AST with <code>val.variables</code></li>
-</ul>
-
-      
-    </div>
-    
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/uncategorized/angr-easy-use/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">&lt;</strong>
-      <div class="article-nav-title">
-        
-          Angr_easy_use
-        
-      </div>
-    </a>
-  
-  
-    <a href="/uncategorized/idrmd/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title"></div>
-      <strong class="article-nav-caption">&gt;</strong>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-      <div class="footer-left">
-        &copy; 2019 lbb
-      </div>
-        <div class="footer-right">
-          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide">lbb</h1>
         </div>
+        <div class="intrude-less">
+          <header id="header" class="inner">
+            <div class="profilepic">
+              <img lazy-src="" class="js-avatar">
+            </div>
+            <hgroup>
+              <h1 class="header-author">lbb</h1>
+            </hgroup>
+
+            <p class="header-subtitle">There is no description</p>
+
+            <nav class="header-menu">
+              <ul>
+
+                <li><a href="/">Home</a></li>
+
+                <li><a href="/archives">bubbles</a></li>
+
+                <div class="clearfix"></div>
+              </ul>
+            </nav>
+            <nav class="header-nav">
+              <div class="social">
+
+              </div>
+            </nav>
+          </header>
+        </div>
+      </nav>
+      <div class="body-wrap">
+        <article id="post-angr-base" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+          <div class="article-meta">
+            <a href="/uncategorized/angr-base/" class="article-date">
+              <time datetime="2019-03-10T14:01:21.000Z" itemprop="datePublished">2019-03-10</time>
+            </a>
+          </div>
+
+          <div class="article-inner">
+
+            <input type="hidden" class="isFancy">
+
+
+            <header class="article-header">
+              <h1 class="article-title" itemprop="name">
+                Angr_base
+
+              </h1>
+            </header>
+
+            <div class="article-info article-info-post">
+
+
+
+              <div class="clearfix"></div>
+            </div>
+
+
+            <div class="article-entry" itemprop="articleBody">
+
+              <h1 id="Angr’s-modules"><a href="#Angr’s-modules" class="headerlink" title="Angr’s modules"></a>Angr’s modules</h1>
+              <ol>
+                <li>CLE 负责装载二进制对象以及它所依赖的库</li>
+                <li>ArchInfo 是包含特定于体系结构的信息的类的集合</li>
+                <li>PyVex 是用了VEX 这个中间语言来分析程序</li>
+                <li>SimuVEX 是VEX 执行模拟器 它允许你控制符号执行</li>
+                <li>Clarify 主要专注于将变量符号化，生成约束式并求解约束式</li>
+                <li>angr以及以上 则是上层封装好的接口</li>
+              </ol>
+              <p><img src="angr4.png" alt=""></p>
+              <h1 id="Angr-Core-concepts"><a href="#Angr-Core-concepts" class="headerlink" title="Angr Core concepts"></a>Angr Core concepts</h1>
+              <p><img src="angr3.png" alt=""></p>
+              <h2 id="CLE"><a href="#CLE" class="headerlink" title="CLE"></a>CLE</h2>
+              <p><a href="http://angr.io/api-doc/cle.html" target="_blank" rel="noopener">CLE API docs</a></p>
+              <h3 id="loaded-objects"><a href="#loaded-objects" class="headerlink" title="loaded objects"></a>loaded objects</h3>
+              <p>cle.Loader<br>cle.ELF</p>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="keyword">import</span> angr, monkeyhex</span><br><span class="line"></span><br><span class="line">proj =angr.Project( file name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proj.loader.all_objects</span><br><span class="line">proj.loader.main_object</span><br><span class="line">proj.loader.shared_objects</span><br><span class="line">proj.loader.all_elf_objects</span><br><span class="line">proj.loader.extern_object</span><br><span class="line">proj.loader.kernel_object</span><br><span class="line">proj.loader.find_object_containing(<span class="number">0x400000</span>)</span><br><span class="line"></span><br><span class="line">obj = proj.loader.main_object</span><br><span class="line">obj.entry</span><br><span class="line">obj.segments</span><br><span class="line">obj.sections</span><br><span class="line">obj.min_addr, obj.max_addr</span><br><span class="line">obj.find_segment_containing(obj.entry)</span><br><span class="line">addr = obj.plt[<span class="string">'abort'</span>]</span><br><span class="line">obj.reverse_plt[addr]</span><br><span class="line">obj.linked_base</span><br><span class="line">obj.mapped_base</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h3 id="Symbols-and-Relocations"><a href="#Symbols-and-Relocations" class="headerlink" title="Symbols and Relocations"></a>Symbols and Relocations</h3>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">malloc = proj.loader.find_symbol(<span class="string">'malloc'</span>)</span><br><span class="line"></span><br><span class="line">malloc.name</span><br><span class="line">malloc.owner_obj </span><br><span class="line">malloc.rebased_addr           <span class="comment">#it is symbol's address in the global address space </span></span><br><span class="line">malloc.linked_addr            <span class="comment">#it is symbol's address relative to the prelinked base of the binary  (maybe is GOT )</span></span><br><span class="line">malloc.relative_addr           <span class="comment">#it is may be used more in windows</span></span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <p>Import symbols do not have meaningful addresses associated with them, but they do provide a reference to the symbol that was used to resolve them, as <code>.resolvedby</code></p>
+              <p>Export symbols are provided by libc<br>
+                <figure class="highlight plain">
+                  <table>
+                    <tr>
+                      <td class="gutter">
+                        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre>
+                      </td>
+                      <td class="code">
+                        <pre><span class="line">malloc.is_export</span><br><span class="line">malloc.is_import</span><br><span class="line"></span><br><span class="line">#On loader, the method is find_symbol because it is not the only one</span><br><span class="line">#On an individual object, the condition is oppsite</span><br><span class="line">main_malloc = proj.loader.main_object.get_symbol(&quot;malloc&quot;)</span><br><span class="line">main_malloc.is_export</span><br><span class="line">main_malloc.is_import</span><br><span class="line">main_malloc.resolvedby</span><br><span class="line"></span><br><span class="line">obj.relocs # it is the full list of relocations for an object</span><br><span class="line">obj.imports #it is a mapping from symbol name to Relocation</span><br><span class="line">#and there is no corresponding list of export symbols</span><br></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </figure>
+              </p>
+              <h3 id="Loading-Options"><a href="#Loading-Options" class="headerlink" title="Loading Options"></a>Loading Options</h3>
+              <p><code>auto_load_libs</code><br>it enables or disables CLE’s attempt to automatically resolve shared library dependencies, and is on by default. </p>
+              <p><code>except_missing_libs</code><br>if set to true, will cause an exception to be thrown whenever a binary has a shared library dependency that cannot be resolved.</p>
+              <p><code>force_load_libs</code> ， <code>skip_libs</code> and <code>ld_path</code> should be passed by a list of strings</p>
+              <h4 id="Per-Binary-Options"><a href="#Per-Binary-Options" class="headerlink" title="Per-Binary Options"></a>Per-Binary Options</h4>
+              <p><code>main_ops</code> and <code>lib_opts</code> can let u specify some options<br><code>main_ops</code> is a mapping from option names to option values<br><code>lib_opts</code> is a mapping from library name to dictionaries mapping option names to option values</p>
+              <ul>
+                <li>backend -which backend to use, as either a class or a name</li>
+                <li>base_addr -a base address to use</li>
+                <li>entry_point -an entry point to use</li>
+                <li>arch -the name of an architecture to use</li>
+              </ul>
+              <figure class="highlight plain">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">angr.Project(main_opts=&#123;&apos;backend&apos;: &apos;ida&apos;, &apos;arch&apos;: &apos;i386&apos;&#125;, lib_opts=&#123;&apos;libc.so.6&apos;: &#123;&apos;backend&apos;: &apos;elf&apos;&#125;&#125;)</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <p><img src="angr1.png" alt=""></p>
+              <h3 id="Symbolic-Function-Summaries"><a href="#Symbolic-Function-Summaries" class="headerlink" title="Symbolic Function Summaries"></a>Symbolic Function Summaries</h3>
+              <p>By default, Project tries to replace external calls to library functions by using symbolic summaries termed <em>SimProcedures</em> -effectively just python functions that imitate the library function’s effect on the state.<br>A whole bunch of functions are implemented as SimProcedures. These builtin procedure are available in <code>angr.SIM_PROCEDURES</code> dictionary, which is two-leveled, keyed first on package name(libc, posix, win32, stubs) and then on the name of the library funciton.</p>
+              <h4 id="Hooking"><a href="#Hooking" class="headerlink" title="Hooking"></a>Hooking</h4>
+              <p><code>proj.hook(addr, hook)</code> where <code>hook</code> is a SimProcedure instance.<br>and you can manage hooks with <code>.is_hooked</code>, <code>.unhook</code> and <code>.hooked_by</code>,which should hopefully not require explanation.</p>
+              <p>Additionally, using <code>proj.hook(addr)</code> as a function decorator can also hook. <code>length</code> keyword argument can make execution jump some number of bytes forward after hook finishes.</p>
+              <p>Furthermore, <code>proj.hook_symbol(name, hook)</code></p>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>stub_func = angr.SIM_PROCEDURES[<span class="string">'stubs'</span>][<span class="string">'ReturnUnconstrained'</span>] <span class="comment"># this is a CLASS</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.hook(<span class="number">0x10000</span>, stub_func())  <span class="comment"># hook with an instance of the class</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.is_hooked(<span class="number">0x10000</span>)            <span class="comment"># these functions should be pretty self-explanitory</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.unhook(<span class="number">0x10000</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.hooked_by(<span class="number">0x10000</span>)</span><br><span class="line">&lt;ReturnUnconstrained&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>@proj.hook(<span class="number">0x20000</span>, length=<span class="number">5</span>)</span><br><span class="line"><span class="meta">... </span><span class="function"><span class="keyword">def</span> <span class="title">my_hook</span><span class="params">(state)</span>:</span></span><br><span class="line"><span class="meta">... </span>    state.regs.rax = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>proj.is_hooked(<span class="number">0x20000</span>)</span><br><span class="line"><span class="keyword">True</span></span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h2 id="Solver-Engine"><a href="#Solver-Engine" class="headerlink" title="Solver Engine"></a>Solver Engine</h2>
+              <p>angr can executee with <em>symbolic variables</em>. And then, performing arithmetic operations with that variable will yield a tree of operations (termed an abstract syntax tree or AST) ASTs can be translated into constraints for an <em>SMT solver</em>, like z3</p>
+              <h3 id="Bitvectors"><a href="#Bitvectors" class="headerlink" title="Bitvectors"></a>Bitvectors</h3>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">state= proj.factory.entry_state()</span><br><span class="line"></span><br><span class="line">one = state.solver.BVV(number, len)</span><br><span class="line">one.zero_extend( <span class="number">64</span>-number)  </span><br><span class="line">one.sign_extend( <span class="number">64</span>-number) <span class="comment">#</span></span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <p>You can also use <code>claripy</code> to produce the BitVectors<br>
+                <figure class="highlight python">
+                  <table>
+                    <tr>
+                      <td class="gutter">
+                        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre>
+                      </td>
+                      <td class="code">
+                        <pre><span class="line"><span class="keyword">import</span> claripy</span><br><span class="line">a = claripy.BVV(<span class="number">3</span>,<span class="number">22</span>)</span><br><span class="line">s = claripy.Solver()</span><br><span class="line">s.add(a+<span class="number">5</span>&gt;<span class="number">0</span>)</span><br><span class="line">s.eval(a)</span><br></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </figure>
+              </p>
+              <p>Each AST has a <code>.op</code> and a <code>.args</code>. The op is a string naming the operation being performed, and the args are the values the operation takes as input.<br>
+                <figure class="highlight python">
+                  <table>
+                    <tr>
+                      <td class="gutter">
+                        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre>
+                      </td>
+                      <td class="code">
+                        <pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree = (x + <span class="number">1</span>) / (y + <span class="number">2</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree</span><br><span class="line">&lt;BV64 (x_9_64 + <span class="number">0x1</span>) / (y_10_64 + <span class="number">0x2</span>)&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.op</span><br><span class="line"><span class="string">'__div__'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args</span><br><span class="line">(&lt;BV64 x_9_64 + <span class="number">0x1</span>&gt;, &lt;BV64 y_10_64 + <span class="number">0x2</span>&gt;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args[<span class="number">0</span>].op</span><br><span class="line"><span class="string">'__add__'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args[<span class="number">0</span>].args</span><br><span class="line">(&lt;BV64 x_9_64&gt;, &lt;BV64 <span class="number">0x1</span>&gt;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args[<span class="number">0</span>].args[<span class="number">1</span>].op</span><br><span class="line"><span class="string">'BVV'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tree.args[<span class="number">0</span>].args[<span class="number">1</span>].args</span><br><span class="line">(<span class="number">1</span>, <span class="number">64</span>)</span><br></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </figure>
+              </p>
+              <p>from here on out, we can know that <em>any bitvector is a tree of operations</em></p>
+              <figure class="highlight plain">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">state.solver.add( x&gt;y)</span><br><span class="line">state.solver.eval(x)</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h3 id="Floating-point-numbers"><a href="#Floating-point-numbers" class="headerlink" title="Floating point numbers"></a>Floating point numbers</h3>
+              <p>create floating point symbols and values with <code>FPS</code> and <code>FPV</code></p>
+              <p>most operations actually have a third parameter, implicitly added when you use the binary operators - the rounding mode. There are multiple rounding modes(round-to-nearest, round-to-zero, round-to-positive, etc). Using the fp operation explicitly (solver.fpAdd for example) with a rounding mode (one of solver.fp.RM_*) as the first argument.</p>
+              <p>The methods <code>raw_to_bv</code> and <code>raw_to_fp</code>can interpret BBV as floats and vice versa<br>
+                <figure class="highlight python">
+                  <table>
+                    <tr>
+                      <td class="gutter">
+                        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                      </td>
+                      <td class="code">
+                        <pre><span class="line">a.raw_to_bv()</span><br><span class="line">a.raw_to_fp()</span><br><span class="line">a.val_to_bv(size)         <span class="comment">#can change the size of bv</span></span><br><span class="line">a.val_to_fp(state.solver.fp.FSORT_FLOAT)</span><br></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </figure>
+              </p>
+              <p><img src="angr2.png" alt=""></p>
+              <p><strong>warning </strong>： it is not way to convert BVV to python int</p>
+              <h2 id="Program-State"><a href="#Program-State" class="headerlink" title="Program State"></a>Program State</h2>
+              <p><code>state.regs</code> provides read and write access to the registers through attributes with the names of each register.<br><code>state.mem</code> provides typed read and write access to memory with index-access notation to specify the address followed by an attribute access to specify the type you would like to interpret the memory as.</p>
+              <ul>
+                <li>Use array[index] notation to specify an address</li>
+                <li>Use .<type> to specify that the memory should be interpreted as <type> (common values: char, short, int, long, size_t, uint8_t, uint16_t…)</type>
+                  </type>
+                </li>
+                <li>From there, you can either:<ul>
+                    <li>Store a value to it, either a bitvector or a python int</li>
+                    <li>Use .resolved to get the value as a bitvector</li>
+                    <li>Use .concrete to get the value as a python int</li>
+                  </ul>
+                </li>
+              </ul>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="comment"># store rdx to memory at 0x1000</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>state.mem[<span class="number">0x1000</span>].uint64_t = state.regs.rdx</span><br><span class="line"></span><br><span class="line"><span class="comment"># dereference rbp</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>state.regs.rbp = state.mem[state.regs.rbp].uint64_t.resolved</span><br><span class="line"></span><br><span class="line"><span class="comment"># add rax, qword ptr [rsp + 8]</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>state.regs.rax += state.mem[state.regs.rsp + <span class="number">8</span>].uint64_t.resolved</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <hr>
+              <h3 id="Basic-Execution"><a href="#Basic-Execution" class="headerlink" title="Basic Execution"></a>Basic Execution</h3>
+              <p><code>state.step()</code> will perform one step of symbolic execution and return an object called <code>SimSuceessors</code>, For now, the object has the <code>.successors</code> property.</p>
+              <p>Angr’s process of symbolic execution is just the taking the operations of the individual instructions compiled into the program and performing them to mutate a SimState</p>
+              <p>use <code>state.posix.stdin.load(0, state.posix.stdin.size)</code> to retrieve a bitvector representing all the content read from stdin.</p>
+              <hr>
+              <h3 id="State-Presets"><a href="#State-Presets" class="headerlink" title="State Presets"></a>State Presets</h3>
+              <ul>
+                <li>.blank_state() constructs a “blank slate” blank state, with most of its data left uninitialized.<br>When accessing uninitialized data, an unconstrained symbolic value will be returned.</li>
+                <li>.entry_state() constructs a state ready to execute at the main binary’s entry point.</li>
+                <li>.full_init_state() constructs a state that is ready to execute through any initializers that need to be run before the main binary’s entry point, for example, shared library constructors or preinitializers.<br>When it is finished with these it will jump to the entry point.</li>
+                <li>.call_state(addr, arg1, arg2, …) constructs a state ready to execute a given function. argN can be a python integer, string, or array, or a bitvector. And pass a pointer to an object should wrap it in an PointerWrapper, i.e. `angr.PointerWrapper(“point to me”)</li>
+              </ul>
+              <p>arguments:</p>
+              <ul>
+                <li><code>addr</code></li>
+                <li>a list of arguments of <code>args</code> and a dictionary of environment variables of <code>env</code> into <code>entry_state</code> or <code>full_init_state</code></li>
+                <li>you can pass a <code>SimCC</code> instance as the <code>cc</code> argument to specify the calling convention</li>
+              </ul>
+              <h3 id="Low-level-interface-for-memory"><a href="#Low-level-interface-for-memory" class="headerlink" title="Low level interface for memory"></a>Low level interface for memory</h3>
+              <p>The <code>state.mem</code> interface is convenient for loading typed data from memory, but it’s very cumbersome for doing raw loads and stores to and from <strong>ranges of memory</strong>.<br><code>state.mem</code> is actually just a bunch of logic to correctly access the underlying memory storage, which is just a flat address spaca filled with bitvector data -<code>state.memory</code><br>Therefore, we can use <code>.load(addr, size)</code> and <code>.store(addr, size)</code> to control <code>state.memory</code>. </p>
+              <p>In addition, the data is in ‘big-endian’ fastion in the <code>state.memory</code>, therefore, you can pass a keyword argument <code>endness</code>, which should be one of the members ofthe <code>Endness</code> enum in the <code>archinfo</code> package.<br>Additionally, the endness of the program being analyzed can be found as <code>arch.memory_endness</code> - for instance <code>state.arch.memory_endness</code>.</p>
+              <h3 id="State-Options"><a href="#State-Options" class="headerlink" title="State Options"></a>State Options</h3>
+              <p>On each SimState object,there is a set(<code>state.options</code>) of all its enabled options<br>When creating a SimState through any constructor, <code>add_options</code> and <code>remove_options</code> can be passed </p>
+              <h3 id="State-Plugins"><a href="#State-Plugins" class="headerlink" title="State Plugins"></a>State Plugins</h3>
+              <p>Almost every property on the state is a plugin </p>
+              <h4 id="The-globals-plugin"><a href="#The-globals-plugin" class="headerlink" title="The globals plugin"></a>The globals plugin</h4>
+              <p><code>state.globals</code> implements the interface of a standard python dict, allowing you to store arbitrary data on a state.</p>
+              <h4 id="The-history-plugin"><a href="#The-history-plugin" class="headerlink" title="The history plugin"></a>The history plugin</h4>
+              <p><code>state.history</code> is actually a linked list of several history nodes, each one representing a single round of execution- you can traverse this list with<code>state.history.parent.parent</code> etc.</p>
+              <p>The history also provides several efficient iterators over the history of certain values.</p>
+              <ul>
+                <li>history.descriptions is a listing of string descriptions of each of the rounds of execution performed on the state.<br>history.bbl_addrs is a listing of the basic block addresses executed by the state.<br>There may be more than one per round of execution, and not all addresses may correspond to binary code - some may be addresses at which SimProcedures are hooked.</li>
+                <li>history.jumpkinds is a listing of the disposition of each of the control flow transitions in the state’s history, as VEX enum strings.<br>history.guards is a listing of the conditions guarding each of the branches that the state has encountered.</li>
+                <li>history.events is a semantic listing of “interesting events” which happened during execution, such as the presence of a symbolic jump condition, the program popping up a message box, or execution terminating with an exit code.</li>
+                <li>history.actions is usually empty, but if you add the angr.options.refs options to the state, it will be popluated with a log of all the memory, register, and temporary value accesses performed by the program.</li>
+              </ul>
+              <h4 id="The-callback-plugin"><a href="#The-callback-plugin" class="headerlink" title="The callback plugin"></a>The callback plugin</h4>
+              <p>The plugin is a linked list of nodes, but there are no provided iterators over the contents of the nodes - instead you can directly iterate over <code>state.callstack</code> to get the callstack frames for each of the active frames, in order from most recent to oldest. If you just want the topmost frame, this is <code>state.callstack</code>.</p>
+              <p>Every call instruction is designed as a frame.</p>
+              <ul>
+                <li>callstack.func_addr is the address of the function currently being executed</li>
+                <li>callstack.call_site_addr is the address of the basic block which called the current function</li>
+                <li>callstack.stack_ptr is the value of the stack pointer from the beginning of the current function</li>
+                <li>callstack.ret_addr is the location that the current function will return to if it returns</li>
+              </ul>
+              <h4 id="Copying-and-Merging"><a href="#Copying-and-Merging" class="headerlink" title="Copying and Merging"></a>Copying and Merging</h4>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">s = proj.factory.blank_state()</span><br><span class="line">s1= s.copy()</span><br><span class="line">s2= s.copy()</span><br><span class="line"></span><br><span class="line"><span class="comment"># merge will return a tuple. the first element is the merged state</span></span><br><span class="line"><span class="comment"># the second element is a symbolic variable describing a state flag</span></span><br><span class="line"><span class="comment"># the third element is a boolean describing whether any merging was done</span></span><br><span class="line">(s_merged, m, anything_merged) = s1.merge(s2)</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h2 id="Simulation-Managers"><a href="#Simulation-Managers" class="headerlink" title="Simulation Managers"></a>Simulation Managers</h2>
+              <p>It is the most important control interface in angr.</p>
+              <p>States are organized into “stashes”. The default stash for most operations is the <code>active</code> stash, which is where your states get put when you initialize a new simulation manager.</p>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">state =proj.factory.entry_state()</span><br><span class="line">simgr= proj.factory.sigmr(state)</span><br><span class="line"></span><br><span class="line">simgr.step()</span><br><span class="line">sigmr.active        <span class="comment"># active SimStates</span></span><br><span class="line">sigmr.run()</span><br><span class="line"></span><br><span class="line">simgr.move(from_stash=<span class="string">'deadeneded'</span>, to_stash=<span class="string">'authenticated'</span>,filter_func=<span class="keyword">lambda</span> s: <span class="string">b'welcome'</span> <span class="keyword">in</span> s.posix.dumps(<span class="number">1</span>))</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <p>if you prepend the name of a stash with <code>one_</code>, you will be given the first state in the stash.<br>if you prepend the name of a stash with <code>mp_</code>, u will be given a <a href="https://github.com/zardus/mulpyplexer" target="_blank" rel="noopener">mulpylexed </a>version of the stash</p>
+              <h3 id="Stash-types"><a href="#Stash-types" class="headerlink" title="Stash types"></a>Stash types</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Stash</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>active</td>
+                    <td>This stash contains the states that will be stepped by default, unless an alternate stash is specified.</td>
+                  </tr>
+                  <tr>
+                    <td>deadended</td>
+                    <td>A state goes to the deadended stash when it cannot continue the execution for some reason, including no more valid instructions, unsat state of all of its successors, or an invalid instruction pointer.</td>
+                  </tr>
+                  <tr>
+                    <td>pruned</td>
+                    <td>When using LAZY_SOLVES, states are not checked for satisfiability unless absolutely necessary. When a state is found to be unsat in the presence of LAZY_SOLVES, the state hierarchy is traversed to identify when, in its history, it initially became unsat. All states that are descendants of that point (which will also be unsat, since a state cannot become un-unsat) are pruned and put in this stash.</td>
+                  </tr>
+                  <tr>
+                    <td>unconstrained</td>
+                    <td>If the save_unconstrained option is provided to the SimulationManager constructor, states that are determined to be unconstrained (i.e., with the instruction pointer controlled by user data or some other source of symbolic data) are placed here.</td>
+                  </tr>
+                  <tr>
+                    <td>unsat</td>
+                    <td>If the save_unsat option is provided to the SimulationManager constructor, states that are determined to be unsatisfiable (i.e., they have constraints that are contradictory, like the input having to be both “AAAA” and “BBBB” at the same time) are placed here.</td>
+                  </tr>
+                  <tr>
+                    <td>errrored</td>
+                    <td>if during execution, an error is raised, then the state will be wrapped in an <code>ErrorRecord</code> object, which contains the state and the error it raised, and then the <strong>record</strong> will be inserted into errored.<code>record.error</code> is the error, and you can launch a debug shell with <code>record.debug()</code></td>
+                  </tr>
+                  <tr>
+                    <td>found</td>
+                    <td>Any of the states in the active stash match the <code>find</code> condition and execution terminates</td>
+                  </tr>
+                  <tr>
+                    <td>avoided</td>
+                    <td>Any of the states matches the condition, and execution continues</td>
+                  </tr>
+                </tbody>
+              </table>
+              <h3 id="Exploration-Techniques"><a href="#Exploration-Techniques" class="headerlink" title="Exploration Techniques"></a>Exploration Techniques</h3>
+              <p><em>exploration techniques</em> can customize the behavior of a simulation manager by using <code>simgr.use_technique(tech)</code>, where tech is an instance of an ExplorationTechnique subclass.<br>angr’s built-in exploration techniques can be found under <code>angr.exploration_techniquves</code>.</p>
+              <ul>
+                <li>DFS: Depth first search, as mentioned earlier. Keeps only one state active at once, putting the rest in the <code>deferred</code> stash until it deadends or errors.</li>
+                <li>Explorer: This technique implements the .explore() functionality, allowing you to search for and avoid addresses.</li>
+                <li>LengthLimiter: Puts a cap on the maximum length of the path a state goes through.</li>
+                <li>LoopSeer: Uses a reasonable approximation of loop counting to discard states that appear to be going through a loop too many times, putting them in a <code>spinning</code> stash and pulling them out again if we run out of otherwise viable states.</li>
+                <li>ManualMergepoint: Marks an address in the program as a merge point, so states that reach that address will be briefly held, and any other states that reach that same point within a timeout will be merged together.</li>
+                <li>MemoryWatcher: Monitors how much memory is free/available on the system between simgr steps and stops exploration if it gets too low.</li>
+                <li>Oppologist: The “operation apologist” is an especially fun gadget - if this technique is enabled and angr encounters an unsupported instruction, for example a bizzare and foreign floating point SIMD op, it will concretize all the inputs to that instruction and emulate the single instruction using the unicorn engine, allowing execution to continue.</li>
+                <li>Spiller: When there are too many states active, this technique can dump some of them to disk in order to keep memory consumption low.<br>Threading: Adds thread-level parallelism to the stepping process. This doesn’t help much because of python’s global interpreter locks, but if you have a program whose analysis spends a lot of time in angr’s native-code dependencies (unicorn, z3, libvex) you can seem some gains.</li>
+                <li>Tracer: An exploration technique that causes execution to follow a dynamic trace recorded from some other source. The dynamic tracer repository has some tools to generate those traces.</li>
+                <li>Veritesting: An implementation of a CMU paper on automatically identifying useful merge points. This is so useful, you can enable it automatically with veritesting=True in the SimulationManager constructor! Note that it frequenly doesn’t play nice with other techniques due to the invasive way it implements static symbolic execution.</li>
+              </ul>
+              <h2 id="Execution-Engines"><a href="#Execution-Engines" class="headerlink" title="Execution Engines"></a>Execution Engines</h2>
+              <p>angr uses a series of engines(subclasses of the <code>SimEngine</code> class) to emulate the effects. The sequence of engines is: </p>
+              <ol>
+                <li>failure engine</li>
+                <li>syscall engine</li>
+                <li>hook engine</li>
+                <li>unicorn engine (when the <code>UNICORN</code> state option is enabled and there is no symbolic data in this state)</li>
+                <li>VEX engine</li>
+              </ol>
+              <h3 id="SimSuccessors"><a href="#SimSuccessors" class="headerlink" title="SimSuccessors"></a>SimSuccessors</h3>
+              <p>The purpose of SimSuccessors is to perform a simple categorization of the successor states, stored in various list attributes.</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Attribute</th>
+                    <th>Guard Condition</th>
+                    <th>Instruction Pointer</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>successors</td>
+                    <td>True (can be symbolic, but constrained to True)</td>
+                    <td>Can be symbolic (but 256 solutions or less; see unconstrained_successssors).</td>
+                    <td>A normal, satisfiable successor state to the state processed by the engine. The instruction pointer of this state may be symbolic (i.e., a computed jump based on user input), so the state might actually represent several potential continuations of execution going forward.</td>
+                  </tr>
+                  <tr>
+                    <td>unsat_successors</td>
+                    <td>False (can be symbolic, but constrained to False).</td>
+                    <td>Can be symbolic.</td>
+                    <td>Unsatisfiable successors. These are successors whose guard conditions can only be false (i.e., jumps that cannot be taken, or the default branch of jumps that must be taken).</td>
+                  </tr>
+                  <tr>
+                    <td>flat_successors</td>
+                    <td>True (can be symbolic, but constrained to True).</td>
+                    <td>Concrete value.</td>
+                    <td>As noted above, states in the successors list can have symbolic instruction pointers. This is rather confusing, as elsewhere in the code (i.e., in SimEngineVEX.process, when it’s time to step that state forward), we make assumptions that a single program state only represents the execution of a single spot in the code. To alleviate this, when we encounter states in successors with symbolic instruction pointers, we compute all possible concrete solutions (up to an arbitrary threshold of 256) for them, and make a copy of the state for each such solution. We call this process “flattening”. These flat_successors are states, each of which has a different, concrete instruction pointer. For example, if the instruction pointer of a state in successors was X+5, where X had constraints of X &gt; 0x800000 and X &lt; 0x800010, we would flatten it into 16 different flat_successors states, one with an instruction pointer of 0x800006, one with 0x800007, and so on until 0x800015.</td>
+                  </tr>
+                  <tr>
+                    <td>unconstrained_successors</td>
+                    <td>True (can be symbolic, but constrained to True).</td>
+                    <td>Symbolic (with more than 256 solutions).</td>
+                    <td>During the flattening procedure described above, if it turns out that there are more than 256 possible solutions for the instruction pointer, we assume that the instruction pointer has been overwritten with unconstrained data (i.e., a stack overflow with user data). This assumption is not sound in general. Such states are placed in unconstrained_successors and not in successors.</td>
+                  </tr>
+                  <tr>
+                    <td>all_successors</td>
+                    <td>Anything</td>
+                    <td>Can be symbolic.</td>
+                    <td>This is successors + unsat_successors + unconstrained_successors.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <h3 id="Breakpoints"><a href="#Breakpoints" class="headerlink" title="Breakpoints"></a>Breakpoints</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Event type</th>
+                    <th>Event meaning</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>mem_read</td>
+                    <td>Memory is being read.</td>
+                  </tr>
+                  <tr>
+                    <td>mem_write</td>
+                    <td>Memory is being written.</td>
+                  </tr>
+                  <tr>
+                    <td>reg_read</td>
+                    <td>A register is being read.</td>
+                  </tr>
+                  <tr>
+                    <td>reg_write</td>
+                    <td>A register is being written.</td>
+                  </tr>
+                  <tr>
+                    <td>tmp_read</td>
+                    <td>A temp is being read.</td>
+                  </tr>
+                  <tr>
+                    <td>tmp_write</td>
+                    <td>A temp is being written.</td>
+                  </tr>
+                  <tr>
+                    <td>expr</td>
+                    <td>An expression is being created (i.e., a result of an arithmetic operation or a constant in the IR).</td>
+                  </tr>
+                  <tr>
+                    <td>statement</td>
+                    <td>An IR statement is being translated.</td>
+                  </tr>
+                  <tr>
+                    <td>instruction</td>
+                    <td>A new (native) instruction is being translated.</td>
+                  </tr>
+                  <tr>
+                    <td>irsb</td>
+                    <td>A new basic block is being translated.</td>
+                  </tr>
+                  <tr>
+                    <td>constraints</td>
+                    <td>New constraints are being added to the state.</td>
+                  </tr>
+                  <tr>
+                    <td>exit</td>
+                    <td>A successor is being generated from execution.</td>
+                  </tr>
+                  <tr>
+                    <td>symbolic_variable</td>
+                    <td>A new symbolic variable is being created.</td>
+                  </tr>
+                  <tr>
+                    <td>call</td>
+                    <td>A call instruction is hit.</td>
+                  </tr>
+                  <tr>
+                    <td>address_concretization</td>
+                    <td>A symbolic memory access is being resolved.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>There events expose different attributes</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Event type</th>
+                    <th>Attribute name</th>
+                    <th>Attribute availability</th>
+                    <th>Attribute meaning</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>mem_read</td>
+                    <td>mem_read_address</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The address at which memory is being read.</td>
+                  </tr>
+                  <tr>
+                    <td>mem_read</td>
+                    <td>mem_read_length</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The length of the memory read.</td>
+                  </tr>
+                  <tr>
+                    <td>mem_read</td>
+                    <td>mem_read_expr</td>
+                    <td>BP_AFTER</td>
+                    <td>The expression at that address.</td>
+                  </tr>
+                  <tr>
+                    <td>mem_write</td>
+                    <td>mem_write_address</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The address at which memory is being written.</td>
+                  </tr>
+                  <tr>
+                    <td>mem_write</td>
+                    <td>mem_write_length</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The length of the memory write.</td>
+                  </tr>
+                  <tr>
+                    <td>mem_write</td>
+                    <td>mem_write_expr</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The expression that is being written.</td>
+                  </tr>
+                  <tr>
+                    <td>reg_read</td>
+                    <td>reg_read_offset</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The offset of the register being read.</td>
+                  </tr>
+                  <tr>
+                    <td>reg_read</td>
+                    <td>reg_read_length</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The length of the register read.</td>
+                  </tr>
+                  <tr>
+                    <td>reg_read</td>
+                    <td>reg_read_expr</td>
+                    <td>BP_AFTER</td>
+                    <td>The expression in the register.</td>
+                  </tr>
+                  <tr>
+                    <td>reg_write</td>
+                    <td>reg_write_offset</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The offset of the register being written.</td>
+                  </tr>
+                  <tr>
+                    <td>reg_write</td>
+                    <td>reg_write_length</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The length of the register write.</td>
+                  </tr>
+                  <tr>
+                    <td>reg_write</td>
+                    <td>reg_write_expr</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The expression that is being written.</td>
+                  </tr>
+                  <tr>
+                    <td>tmp_read</td>
+                    <td>tmp_read_num</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The number of the temp being read.</td>
+                  </tr>
+                  <tr>
+                    <td>tmp_read</td>
+                    <td>tmp_read_expr</td>
+                    <td>BP_AFTER</td>
+                    <td>The expression of the temp.</td>
+                  </tr>
+                  <tr>
+                    <td>tmp_write</td>
+                    <td>tmp_write_num</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The number of the temp written.</td>
+                  </tr>
+                  <tr>
+                    <td>tmp_write</td>
+                    <td>tmp_write_expr</td>
+                    <td>BP_AFTER</td>
+                    <td>The expression written to the temp.</td>
+                  </tr>
+                  <tr>
+                    <td>expr</td>
+                    <td>expr</td>
+                    <td>BP_AFTER</td>
+                    <td>The value of the expression.</td>
+                  </tr>
+                  <tr>
+                    <td>statement</td>
+                    <td>statement</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The index of the IR statement (in the IR basic block).</td>
+                  </tr>
+                  <tr>
+                    <td>instruction</td>
+                    <td>instruction</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The address of the native instruction.</td>
+                  </tr>
+                  <tr>
+                    <td>irsb</td>
+                    <td>address</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The address of the basic block.</td>
+                  </tr>
+                  <tr>
+                    <td>constraints</td>
+                    <td>added_constraints</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The list of constraint expressions being added.</td>
+                  </tr>
+                  <tr>
+                    <td>call</td>
+                    <td>function_address</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The name of the function being called.</td>
+                  </tr>
+                  <tr>
+                    <td>exit</td>
+                    <td>exit_target</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The expression representing the target of a SimExit.</td>
+                  </tr>
+                  <tr>
+                    <td>exit</td>
+                    <td>exit_guard</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The expression representing the guard of a SimExit.</td>
+                  </tr>
+                  <tr>
+                    <td>exit</td>
+                    <td>exit_jumpkind</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The expression representing the kind of SimExit.</td>
+                  </tr>
+                  <tr>
+                    <td>symbolic_variable</td>
+                    <td>symbolic_name</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The name of the symbolic variable being created. The solver engine might modify this name (by appending a unique ID and length). Check the symbolic_expr for the final symbolic expression.</td>
+                  </tr>
+                  <tr>
+                    <td>symbolic_variable</td>
+                    <td>symbolic_size</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The size of the symbolic variable being created.</td>
+                  </tr>
+                  <tr>
+                    <td>symbolic_variable</td>
+                    <td>symbolic_expr</td>
+                    <td>BP_AFTER</td>
+                    <td>The expression representing the new symbolic variable.</td>
+                  </tr>
+                  <tr>
+                    <td>address_concretization</td>
+                    <td>address_concretization_strategy</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The SimConcretizationStrategy being used to resolve the address. This can be modified by the breakpoint handler to change the strategy that will be applied. If your breakpoint handler sets this to None, this strategy will be skipped.</td>
+                  </tr>
+                  <tr>
+                    <td>address_concretization</td>
+                    <td>address_concretization_action</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The SimAction object being used to record the memory action.</td>
+                  </tr>
+                  <tr>
+                    <td>address_concretization</td>
+                    <td>address_concretization_memory</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The SimMemory object on which the action was taken.</td>
+                  </tr>
+                  <tr>
+                    <td>address_concretization</td>
+                    <td>address_concretization_expr</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>The AST representing the memory index being resolved. The breakpoint handler can modify this to affect the address being resolved.</td>
+                  </tr>
+                  <tr>
+                    <td>address_concretization</td>
+                    <td>address_concretization_add_constraints</td>
+                    <td>BP_BEFORE or BP_AFTER</td>
+                    <td>Whether or not constraints should/will be added for this read.</td>
+                  </tr>
+                  <tr>
+                    <td>address_concretization</td>
+                    <td>address_concretization_result</td>
+                    <td>BP_AFTER</td>
+                    <td>The list of resolved memory addresses (integers). The breakpoint handler can overwrite these to effect a different resolution result.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <h3 id="Caution-about-mem-read-breakpoint"><a href="#Caution-about-mem-read-breakpoint" class="headerlink" title="Caution about mem_read breakpoint"></a>Caution about <code>mem_read</code> breakpoint</h3>
+              <p>The <code>mem_read</code> breakpoints gets triggered anytime there are memory reads by either the executing program or the binary analysis. If you are using breakpoint on <code>mem_read</code> and also using <code>state.men</code> to load data from memory addresses, then know that the breakpoint will be fired.<br>The solution of this problem is using <code>state.memory.load</code> with the keyword arguments <code>disable_actions=True</code> and <code>inspect=False</code>.</p>
+              <hr>
+              <h1 id="Simple-application"><a href="#Simple-application" class="headerlink" title="Simple application"></a>Simple application</h1>
+              <p>There are three ways to control the program’s input.</p>
+              <ul>
+                <li>args</li>
+              </ul>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="keyword">import</span> claripy</span><br><span class="line"></span><br><span class="line">args=claripy.BVS(<span class="string">'args'</span>,size)</span><br><span class="line">state= prog.factory.entry_state(args=args)</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <ul>
+                <li>place in <code>posix</code></li>
+              </ul>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">p = angr.Project(<span class="string">'wyvern'</span>)</span><br><span class="line"></span><br><span class="line">st = p.factory.full_init_state(args=[<span class="string">'./wyvern'</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># Constrain the first 28 bytes to be non-null and non-newline:</span></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> xrange(<span class="number">28</span>):</span><br><span class="line">    k = st.posix.files[<span class="number">0</span>].read_from(<span class="number">1</span>)</span><br><span class="line">    st.se.add(k != <span class="number">0</span>)</span><br><span class="line">    st.se.add(k != <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Constrain the last byte to be a newline</span></span><br><span class="line">k = st.posix.files[<span class="number">0</span>].read_from(<span class="number">1</span>)</span><br><span class="line">st.se.add(k == <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Reset the symbolic stdin's properties and set its length.</span></span><br><span class="line">st.posix.files[<span class="number">0</span>].seek(<span class="number">0</span>)</span><br><span class="line">st.posix.files[<span class="number">0</span>].length = <span class="number">29</span></span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <ul>
+                <li>place in where are the args at</li>
+              </ul>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"></span><br><span class="line">p = angr.Project(<span class="string">'./vul'</span>, load_options=&#123;<span class="string">"auto_load_libs"</span>: <span class="keyword">False</span>&#125;)</span><br><span class="line">s = p.factory.blank_state(addr=<span class="number">0x80485c8</span>)</span><br><span class="line"></span><br><span class="line">bv = s.BV(<span class="string">'toMemory'</span>, <span class="number">8</span>*<span class="number">4</span>)</span><br><span class="line">s.se.add(bv &gt; <span class="number">1000</span>)</span><br><span class="line">s.memory.store(<span class="number">0x08049b80</span>, bv.reversed)</span><br><span class="line"></span><br><span class="line">pg = p.factory.path_group(s, immutable=<span class="keyword">False</span>)</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h1 id="Built-in-Analyses"><a href="#Built-in-Analyses" class="headerlink" title="Built-in Analyses"></a>Built-in Analyses</h1>
+              <h2 id="CFG"><a href="#CFG" class="headerlink" title="CFG"></a>CFG</h2>
+              <p>CFGFast uses static analysis to generate a CFG. And CFGEmulated uses symbolic execution to capture the CFG.<br>CFG, at it’s core, is a <a href="https://networkx.github.io/" target="_blank" rel="noopener">NetworkX</a> di-gragh. This means that all of the normal NetworkX APIs are available.</p>
+              <figure class="highlight python">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">cfg = p.analyses.CFGFast()</span><br><span class="line">cfg = p.analyses.CFGEumlated(keep_state=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"This is the graph:"</span>, cfg.graph)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"It has %d nodes and %d edges"</span> % (len(cfg.graph.nodes()), len(cfg.graph.edges())))</span><br><span class="line">&gt;</span><br><span class="line"><span class="comment"># this grabs *any* node at a given location:</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>entry_node = cfg.get_any_node(p.entry)</span><br><span class="line"></span><br><span class="line"><span class="comment"># on the other hand, this grabs all of the nodes</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"There were %d contexts for the entry block"</span> % len(cfg.get_all_nodes(p.entry)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># we can also look up predecessors and successors</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Predecessors of the entry point:"</span>, entry_node.predecessors)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Successors of the entry point:"</span>, entry_node.successors)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">"Successors (and type of jump) of the entry point:"</span>, [ jumpkind + <span class="string">" to "</span> + str(node.addr) <span class="keyword">for</span> node,jumpkind <span class="keyword">in</span> cfg.get_successors_and_jumpkind(entry_node) ])</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <p>[+] Viewing angr CFGs can be found in <a href="https://github.com/axt/angr-utils" target="_blank" rel="noopener">axt’s angr-utils repository</a>.<br>
+                <figure class="highlight python">
+                  <table>
+                    <tr>
+                      <td class="gutter">
+                        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                      </td>
+                      <td class="code">
+                        <pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"><span class="keyword">from</span> angrutils <span class="keyword">import</span> *</span><br><span class="line">proj = angr.Project(<span class="string">"&lt;...&gt;/ais3_crackme"</span>, load_options=&#123;<span class="string">'auto_load_libs'</span>:<span class="keyword">False</span>&#125;)</span><br><span class="line">main = proj.loader.main_object.get_symbol(<span class="string">"main"</span>)</span><br><span class="line">start_state = proj.factory.blank_state(addr=main.rebased_addr)</span><br><span class="line">cfg = proj.analyses.CFGEmulated(fail_fast=<span class="keyword">True</span>, starts=[main.rebased_addr], initial_state=start_state)</span><br><span class="line">plot_cfg(cfg, <span class="string">"ais3_cfg"</span>, asminst=<span class="keyword">True</span>, remove_imports=<span class="keyword">True</span>, remove_path_terminator=<span class="keyword">True</span>)</span><br></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </figure>
+              </p>
+              <p>[+] also can use metplotlib to draw<br>
+                <figure class="highlight python">
+                  <table>
+                    <tr>
+                      <td class="gutter">
+                        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                      </td>
+                      <td class="code">
+                        <pre><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"></span><br><span class="line">matplotlib.use(<span class="string">'Agg'</span>)</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">nx.draw(cfg.graph)</span><br><span class="line">plt.savefig(<span class="string">'temp.png'</span>)</span><br></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </figure>
+              </p>
+              <p>warning: Loading shared libraries is usually useless. Therefore, should add <code>load_options={&#39;auto_load_libs&#39;:False}</code> to the <code>Project</code> constructor. </p>
+              <h3 id="Function-Manager"><a href="#Function-Manager" class="headerlink" title="Function Manager"></a>Function Manager</h3>
+              <p>The CFG result produces an object called the <em>Function Manager</em>, accessible through <code>cfg.kb.functions</code>.</p>
+              <p>Functions have several important properties!</p>
+              <ul>
+                <li><code>entry_func.block_addrs</code> is a set of addresses at which basic blocks belonging to the function begin.</li>
+                <li><code>entry_func.blocks</code> is the set of basic blocks belonging to the function, that you can explore and disassemble using capstone.</li>
+                <li><code>entry_func.string_references()</code> returns a list of all the constant strings that were referred to at any point in the function.<br>They are formatted as <code>(addr, string)</code> tuples, where addr is the address in the binary’s data section the string lives, and string is a python string that contains the value of the string.</li>
+                <li><code>entry_func.returning</code> is a boolean value signifying whether or not the function can return.<br><code>False</code> indicates that all paths do not return.</li>
+                <li><code>entry_func.callable</code> is an angr Callable object referring to this function.<br>You can call it like a python function with python arguments and get back an actual result (may be symbolic) as if you ran the function with those arguments!</li>
+                <li><code>entry_func.transition_graph</code> is a NetworkX DiGraph describing control flow within the function itself. It resembles the control-flow graphs IDA displays on a per-function level.</li>
+                <li><code>entry_func.name</code> is the name of the function.</li>
+                <li><code>entry_func.has_unresolved_calls</code> and <code>entry.has_unresolved_jumps</code> have to do with detecting imprecision within the CFG.<br>Sometimes, the analysis cannot detect what the possible target of an indirect call or jump could be.<br>If this occurs within a function, that function will have the appropriate <code>has_unresolved_*</code> value set to <code>True</code>.</li>
+                <li><code>entry_func.get_call_sites()</code> returns a list of all the addresses of basic blocks which end in calls out to other functions.</li>
+                <li><code>entry_func.get_call_target(callsite_addr)</code> will, given <code>callsite_addr</code> from the list of call site addresses, return where that callsite will call out to.</li>
+                <li><code>entry_func.get_call_return(callsite_addr)</code> will, given <code>callsite_addr</code> from the list of call site addresses, return where that callsite should return to.</li>
+              </ul>
+              <h3 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h3>
+              <p>These are the most useful options when working with CFGFast:</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Option</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>force_complete_scan</td>
+                    <td>(Default: True) Treat the entire binary as code for the purposes of function detection. If you have a blob (e.g., mixed code and data) <em>you want to turn this off</em>.</td>
+                  </tr>
+                  <tr>
+                    <td>function_starts</td>
+                    <td>A list of addresses, to use as entry points into the analysis.</td>
+                  </tr>
+                  <tr>
+                    <td>normalize</td>
+                    <td>Normalize the resulting functions (e.g., each basic block belongs to at most one function)</td>
+                  </tr>
+                  <tr>
+                    <td>collect_data_references</td>
+                    <td>Find all references to data during CFG generation. The results can allow you to find cross-references to data.</td>
+                  </tr>
+                  <tr>
+                    <td>resolve_indirect_jumps</td>
+                    <td>Perform additional analysis to attempt to find targets for every indirect jump found during CFG creation.</td>
+                  </tr>
+                  <tr>
+                    <td>more!</td>
+                    <td>Examine the docstring on p.analyses.CFGFast for more up-to-date options</td>
+                  </tr>
+                </tbody>
+              </table>
+              <h2 id="CFGEmulated-details"><a href="#CFGEmulated-details" class="headerlink" title="CFGEmulated details"></a>CFGEmulated details</h2>
+              <p>The most common options for CFGEmulated include:</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Option</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>context_sensitivity_level</td>
+                    <td>This sets the context sensitivity level of the analysis. See the context sensitivity level section below for more information. This is 1 by default.</td>
+                  </tr>
+                  <tr>
+                    <td>starts</td>
+                    <td>A list of addresses, to use as entry points into the analysis.</td>
+                  </tr>
+                  <tr>
+                    <td>avoid_runs</td>
+                    <td>A list of addresses to ignore in the analysis.</td>
+                  </tr>
+                  <tr>
+                    <td>call_depth</td>
+                    <td>Limit the depth of the analysis to some number calls. This is useful for checking which functions a specific function can directly jump to (by setting <code>call_depth</code> to 1).</td>
+                  </tr>
+                  <tr>
+                    <td>initial_state</td>
+                    <td>An initial state can be provided to the CFG, which it will use throughout its analysis.</td>
+                  </tr>
+                  <tr>
+                    <td>keep_state</td>
+                    <td>To save memory, the state at each basic block is discarded by default. If <code>keep_state</code> is True, the state is saved in the CFGNode.</td>
+                  </tr>
+                  <tr>
+                    <td>enable_symbolic_back_traversal</td>
+                    <td>Whether to enable an intensive technique for resolving indirect jumps</td>
+                  </tr>
+                  <tr>
+                    <td>enable_advanced_backward_slicing</td>
+                    <td>Whether to enable another intensive technique for resolving direct jumps</td>
+                  </tr>
+                  <tr>
+                    <td>more!</td>
+                    <td>Examine the docstring on p.analyses.CFGEmulated for more up-to-date options</td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr>
+              <h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1>
+              <h2 id="List-of-Claripy-Operations"><a href="#List-of-Claripy-Operations" class="headerlink" title="List of Claripy Operations"></a>List of Claripy Operations</h2>
+              <h3 id="Arithmetic-and-Logic"><a href="#Arithmetic-and-Logic" class="headerlink" title="Arithmetic and Logic"></a>Arithmetic and Logic</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>LShR</td>
+                    <td>Logically shifts an expression to the right. (the default shifts are arithmetic)</td>
+                    <td><code>x.LShR(10)</code></td>
+                  </tr>
+                  <tr>
+                    <td>RotateLeft</td>
+                    <td>Rotates an expression left</td>
+                    <td><code>x.RotateLeft(8)</code></td>
+                  </tr>
+                  <tr>
+                    <td>RotateRight</td>
+                    <td>Rotates an expression right</td>
+                    <td><code>x.RotateRight(8)</code></td>
+                  </tr>
+                  <tr>
+                    <td>And</td>
+                    <td>Logical And (on boolean expressions)</td>
+                    <td><code>solver.And(x == y, x &gt; 0)</code></td>
+                  </tr>
+                  <tr>
+                    <td>Or</td>
+                    <td>Logical Or (on boolean expressions)</td>
+                    <td><code>solver.Or(x == y, y &lt; 10)</code></td>
+                  </tr>
+                  <tr>
+                    <td>Not</td>
+                    <td>Logical Not (on a boolean expression)</td>
+                    <td><code>solver.Not(x == y)</code> is the same as <code>x != y</code></td>
+                  </tr>
+                  <tr>
+                    <td>If</td>
+                    <td>An If-then-else</td>
+                    <td>Choose the maximum of two expressions: <code>solver.If(x &gt; y, x, y)</code></td>
+                  </tr>
+                  <tr>
+                    <td>ULE</td>
+                    <td>Unsigned less than or equal to</td>
+                    <td>Check if x is less than or equal to y: <code>x.ULE(y)</code></td>
+                  </tr>
+                  <tr>
+                    <td>ULT</td>
+                    <td>Unsigned less than</td>
+                    <td>Check if x is less than y: <code>x.ULT(y)</code></td>
+                  </tr>
+                  <tr>
+                    <td>UGE</td>
+                    <td>Unsigned greater than or equal to</td>
+                    <td>Check if x is greater than or equal to y: <code>x.UGE(y)</code></td>
+                  </tr>
+                  <tr>
+                    <td>UGT</td>
+                    <td>Unsigned greater than</td>
+                    <td>Check if x is greater than y: <code>x.UGT(y)</code></td>
+                  </tr>
+                  <tr>
+                    <td>SLE</td>
+                    <td>Signed less than or equal to</td>
+                    <td>Check if x is less than or equal to y: <code>x.SLE(y)</code></td>
+                  </tr>
+                  <tr>
+                    <td>SLT</td>
+                    <td>Signed less than</td>
+                    <td>Check if x is less than y: <code>x.SLT(y)</code></td>
+                  </tr>
+                  <tr>
+                    <td>SGE</td>
+                    <td>Signed greater than or equal to</td>
+                    <td>Check if x is greater than or equal to y: <code>x.SGE(y)</code></td>
+                  </tr>
+                  <tr>
+                    <td>SGT</td>
+                    <td>Signed greater than</td>
+                    <td>Check if x is greater than y: <code>x.SGT(y)</code></td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>TODO: Add the floating point ops</p>
+              <h3 id="Bitvector-Manipulation"><a href="#Bitvector-Manipulation" class="headerlink" title="Bitvector Manipulation"></a>Bitvector Manipulation</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>SignExt</td>
+                    <td>Pad a bitvector on the left with <code>n</code> sign bits</td>
+                    <td><code>x.sign_extend(n)</code></td>
+                  </tr>
+                  <tr>
+                    <td>ZeroExt</td>
+                    <td>Pad a bitvector on the left with <code>n</code> zero bits</td>
+                    <td><code>x.zero_extend(n)</code></td>
+                  </tr>
+                  <tr>
+                    <td>Extract</td>
+                    <td>Extracts the given bits (zero-indexed from the <em>right</em>, inclusive) from an expression.</td>
+                    <td>Extract the least significant byte of x: <code>x[7:0]</code></td>
+                  </tr>
+                  <tr>
+                    <td>Concat</td>
+                    <td>Concatenates any number of expressions together into a new expression.</td>
+                    <td><code>x.concat(y, ...)</code></td>
+                  </tr>
+                </tbody>
+              </table>
+              <h3 id="Extra-Functionality"><a href="#Extra-Functionality" class="headerlink" title="Extra Functionality"></a>Extra Functionality</h3>
+              <p>There’s a bunch of prepackaged behavior that you <em>could</em> implement by analyzing the ASTs and composing sets of operations, but here’s an easier way to do it:</p>
+              <ul>
+                <li>You can chop a bitvector into a list of chunks of <code>n</code> bits with <code>val.chop(n)</code></li>
+                <li>You can endian-reverse a bitvector with <code>x.reversed</code></li>
+                <li>You can get the width of a bitvector in bits with <code>val.length</code></li>
+                <li>You can test if an AST has any symbolic components with <code>val.symbolic</code></li>
+                <li>You can get a set of the names of all the symbolic variables implicated in the construction of an AST with <code>val.variables</code></li>
+              </ul>
+
+            </div>
+
+          </div>
+
+          <nav id="article-nav">
+
+            <a href="/uncategorized/angr-easy-use/" id="article-nav-newer" class="article-nav-link-wrap">
+              <strong class="article-nav-caption">&lt;</strong>
+              <div class="article-nav-title">
+
+                Angr_easy_use
+
+              </div>
+            </a>
+
+
+            <a href="/uncategorized/idrmd/" id="article-nav-older" class="article-nav-link-wrap">
+              <div class="article-nav-title"></div>
+              <strong class="article-nav-caption">&gt;</strong>
+            </a>
+
+          </nav>
+
+        </article>
+      </div>
+      <footer id="footer">
+        <div class="outer">
+          <div id="footer-info">
+            <div class="footer-left">
+              &copy; 2019 lbb
+            </div>
+            <div class="footer-right">
+              <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
-  </div>
-</footer>
-    </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
 
 
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
-</script>
-<script src="/js/main.js"></script>
+    <script>
+      var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+      }
+    </script>
+    <script src="/js/main.js"></script>
 
 
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
     tex2jax: {
         inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
         processEscapes: true,
@@ -980,9 +1233,8 @@ MathJax.Hub.Queue(function() {
 });
 </script>
 
-<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
-
-
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
   </div>
 </body>
+
 </html>

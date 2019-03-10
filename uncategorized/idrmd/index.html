@@ -1,220 +1,245 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.8.0">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
-  
+
   <title>bubbling</title>
 
   <!-- keywords -->
-  
+
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="idr机制idr介绍系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。用到idr机">
-<meta property="og:type" content="article">
-<meta property="og:title" content="bubbling">
-<meta property="og:url" content="http://djjdong.github.io/uncategorized/idrmd/index.html">
-<meta property="og:site_name" content="bubbling">
-<meta property="og:description" content="idr机制idr介绍系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。用到idr机">
-<meta property="og:locale" content="default">
-<meta property="og:image" content="http://djjdong.github.io/uncategorized/idrmd/idr_struct.jpg">
-<meta property="og:updated_time" content="2019-02-03T13:47:54.926Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="bubbling">
-<meta name="twitter:description" content="idr机制idr介绍系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。用到idr机">
-<meta name="twitter:image" content="http://djjdong.github.io/uncategorized/idrmd/idr_struct.jpg">
-  
-  
+  <meta name="description" content="idr机制 idr介绍 系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。用到id">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="bubbling">
+  <meta property="og:url" content="http://djjdong.github.io/uncategorized/idrmd/index.html">
+  <meta property="og:site_name" content="bubbling">
+  <meta property="og:description" content="idr机制 idr介绍 系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。用到id">
+  <meta property="og:locale" content="default">
+  <meta property="og:image" content="http://djjdong.github.io/uncategorized/idrmd/idr_struct.jpg">
+  <meta property="og:updated_time" content="2019-02-03T13:47:54.926Z">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="bubbling">
+  <meta name="twitter:description" content="idr机制 idr介绍 系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。用到id">
+  <meta name="twitter:image" content="http://djjdong.github.io/uncategorized/idrmd/idr_struct.jpg">
+
+
   <link rel="stylesheet" href="/css/style.css">
-  
-  
+
 
   <script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
   <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 
-  
-</head></html>
+
+</head>
+
+</html>
+
 <body>
   <div id="container">
     <div id="particles-js"></div>
     <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="" class="js-avatar">
-			
-		</a>
+      <div class="overlay"></div>
+      <div class="intrude-less">
+        <header id="header" class="inner">
+          <a href="/" class="profilepic">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">lbb</a></h1>
-		</hgroup>
+            <img lazy-src="" class="js-avatar">
 
-		
-		<p class="header-subtitle">There is no description</p>
-		
+          </a>
 
-		
+          <hgroup>
+            <h1 class="header-author"><a href="/">lbb</a></h1>
+          </hgroup>
 
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">Home</a></li>
-				        
-							<li><a href="/archives">bubbles</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-						</div>
-					</nav>
-				</section>
-				
-				
-				
-				
 
-				
-			</div>
-		</div>
-	</header>				
-</div>
+          <p class="header-subtitle">There is no description</p>
+
+
+
+
+          <div class="switch-area">
+            <div class="switch-wrap">
+              <section class="switch-part switch-part1">
+                <nav class="header-menu">
+                  <ul>
+
+                    <li><a href="/">Home</a></li>
+
+                    <li><a href="/archives">bubbles</a></li>
+
+                  </ul>
+                </nav>
+                <nav class="header-nav">
+                  <div class="social">
+
+                  </div>
+                </nav>
+              </section>
+
+
+
+
+
+
+            </div>
+          </div>
+        </header>
+      </div>
     </div>
     <div class="mid-col">
       <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">lbb</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-				<img lazy-src="" class="js-avatar">
-			</div>
-			<hgroup>
-			  <h1 class="header-author">lbb</h1>
-			</hgroup>
-			
-			<p class="header-subtitle">There is no description</p>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">Home</a></li>
-		        
-					<li><a href="/archives">bubbles</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-				</div>
-			</nav>
-		</header>				
-	</div>
-</nav>
-      <div class="body-wrap"><article id="post-idrmd" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/uncategorized/idrmd/" class="article-date">
-  	<time datetime="2019-02-03T13:47:54.817Z" itemprop="datePublished">2019-02-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="idr机制"><a href="#idr机制" class="headerlink" title="idr机制"></a>idr机制</h1><h2 id="idr介绍"><a href="#idr介绍" class="headerlink" title="idr介绍"></a>idr介绍</h2><p>系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。<br>idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。<br>idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。<br>用到idr机制的主要有：IPC id（消息队列id、信号量id、共享内存id等），磁盘分区id(sda中数字部分）等</p>
-<h2 id="idr-实现"><a href="#idr-实现" class="headerlink" title="idr 实现"></a>idr 实现</h2><p>idr 是由基数树构成，叶节点存储id对应的指针，树干节点不存储数据，每个节点有radix 个子节点，每个叶节点可以存储radix个指针</p>
-<p>根节点、树干节点、叶节点均用 <strong>idr_layer </strong>表示:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span>&#123;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> 		bitmap;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span>	*<span class="title">ary</span>[1&lt;&lt;IDR_BITS];</span></span><br><span class="line"><span class="class">	int 				count;</span></span><br><span class="line"><span class="class">	int 				layer; //distance from leaf</span></span><br><span class="line"><span class="class">	struct rcu_head 	rcu_head;     //用于idr_layer的内存释放</span></span><br><span class="line"><span class="class">&#125;;</span></span><br></pre></td></tr></table></figure></p>
-<p>idr基数树<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">idr</span>&#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span> 	*<span class="title">top</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span> 	*<span class="title">id_free</span>;</span>    <span class="comment">//缓存池链表</span></span><br><span class="line">	<span class="keyword">int</span>					layers;</span><br><span class="line">	<span class="keyword">int</span> 				id_free_cnt;</span><br><span class="line">	<span class="keyword">spinlock_t</span>			lock;        <span class="comment">//idr锁，用于保护基数树</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p><img src="idr_struct.jpg" alt="idr struct"></p>
-<h3 id="宏定义"><a href="#宏定义" class="headerlink" title="宏定义"></a>宏定义</h3><blockquote>
-<p>IDR_BITS：子结点索引位数，5或6；bitmap是long类型，表示子结点个数为sizeof(long)<em>8；long占32位时，可表示32个子结点，则需索引位数为5；long占64位时，则需索引位数为6<br>IDR_SIZE：子结点个数，(1 &lt;&lt; IDR_BITS)<br>IDR_MASK：子结点索引掩码，((1 &lt;&lt; IDR_BITS)-1)<br>MAX_ID_SHIFT：ID空间大小位数，(sizeof(int)</em>8 - 1)；ID空间为0~0x7fffffff，即正整数<br>MAX_LEVEL：表示ID空间所需的层数，(MAX_ID_SHIFT + IDR_BITS - 1) / IDR_BITS；n层基数树表示id空间的个数=IDR_SIZE^n=1&lt;&lt;(n*IDR_BITS)，则表示整个ID空间需要n=roundup(log2(1&lt;&lt;MAX_ID_SHIFT)/IDR_BITS)=(MAX_ID_SHIFT + IDR_BITS - 1) / IDR_BITS层<br>IDR_FREE_MAX：表示idr缓存在分配id过程中所需结点的最大值，MAX_LEVEL + MAX_LEVEL；分配id过程中，可能需要对树进行扩容，如果出现结点为空还要分配结点；比如空树情况，分配一个值为0x7fffffff的id，则首先要扩容MAX_LEVEL个结点，再添加MAX_LEVEL-1个结点后才能正确分配id</p>
-</blockquote>
-<p>…剩下的就看<a href="https://blog.csdn.net/morphad/article/details/9051261" target="_blank" rel="noopener"> https://blog.csdn.net/morphad/article/details/9051261</a><br>有丶复杂</p>
-
-      
-    </div>
-    
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/uncategorized/angr-base/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">&lt;</strong>
-      <div class="article-nav-title">
-        
-          Angr_base
-        
-      </div>
-    </a>
-  
-  
-    <a href="/uncategorized/cve2017_5123/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Cve2017_5123</div>
-      <strong class="article-nav-caption">&gt;</strong>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-      <div class="footer-left">
-        &copy; 2019 lbb
-      </div>
-        <div class="footer-right">
-          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide">lbb</h1>
         </div>
+        <div class="intrude-less">
+          <header id="header" class="inner">
+            <div class="profilepic">
+              <img lazy-src="" class="js-avatar">
+            </div>
+            <hgroup>
+              <h1 class="header-author">lbb</h1>
+            </hgroup>
+
+            <p class="header-subtitle">There is no description</p>
+
+            <nav class="header-menu">
+              <ul>
+
+                <li><a href="/">Home</a></li>
+
+                <li><a href="/archives">bubbles</a></li>
+
+                <div class="clearfix"></div>
+              </ul>
+            </nav>
+            <nav class="header-nav">
+              <div class="social">
+
+              </div>
+            </nav>
+          </header>
+        </div>
+      </nav>
+      <div class="body-wrap">
+        <article id="post-idrmd" class="article article-type-post" itemscope="" itemprop="blogPost">
+
+          <div class="article-meta">
+            <a href="/uncategorized/idrmd/" class="article-date">
+              <time datetime="2019-02-03T13:47:54.817Z" itemprop="datePublished">2019-02-03</time>
+            </a>
+          </div>
+
+          <div class="article-inner">
+
+            <input type="hidden" class="isFancy">
+
+
+            <div class="article-entry" itemprop="articleBody">
+
+              <h1 id="idr机制"><a href="#idr机制" class="headerlink" title="idr机制"></a>idr机制</h1>
+              <h2 id="idr介绍"><a href="#idr介绍" class="headerlink" title="idr介绍"></a>idr介绍</h2>
+              <p>系统许多资源都用整数ID 来标识，如进程id，文件描述符id，IPC id等，资源信息通常存放在对应的数据结构中，id 与数据结构的关联机制有不同的实现，idr机制是其中的一种。<br>idr， id radix。 主要用于建立 id与指向对应的数据结构指针之间的对应关系。<br>idr 用类基数树结构来构造一个稀疏数组，以 id为索引找到对应数组元素，进而找到对应的数据结构指针。<br>用到idr机制的主要有：IPC id（消息队列id、信号量id、共享内存id等），磁盘分区id(sda中数字部分）等</p>
+              <h2 id="idr-实现"><a href="#idr-实现" class="headerlink" title="idr 实现"></a>idr 实现</h2>
+              <p>idr 是由基数树构成，叶节点存储id对应的指针，树干节点不存储数据，每个节点有radix 个子节点，每个叶节点可以存储radix个指针</p>
+              <p>根节点、树干节点、叶节点均用 <strong>idr_layer </strong>表示:<br>
+                <figure class="highlight c">
+                  <table>
+                    <tr>
+                      <td class="gutter">
+                        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                      </td>
+                      <td class="code">
+                        <pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span>&#123;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> 		bitmap;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span>	*<span class="title">ary</span>[1&lt;&lt;IDR_BITS];</span></span><br><span class="line"><span class="class">	int 				count;</span></span><br><span class="line"><span class="class">	int 				layer; //distance from leaf</span></span><br><span class="line"><span class="class">	struct rcu_head 	rcu_head;     //用于idr_layer的内存释放</span></span><br><span class="line"><span class="class">&#125;;</span></span><br></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </figure>
+              </p>
+              <p>idr基数树<br>
+                <figure class="highlight c">
+                  <table>
+                    <tr>
+                      <td class="gutter">
+                        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                      </td>
+                      <td class="code">
+                        <pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">idr</span>&#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span> 	*<span class="title">top</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr_layer</span> 	*<span class="title">id_free</span>;</span>    <span class="comment">//缓存池链表</span></span><br><span class="line">	<span class="keyword">int</span>					layers;</span><br><span class="line">	<span class="keyword">int</span> 				id_free_cnt;</span><br><span class="line">	<span class="keyword">spinlock_t</span>			lock;        <span class="comment">//idr锁，用于保护基数树</span></span><br><span class="line">&#125;;</span><br></pre>
+                      </td>
+                    </tr>
+                  </table>
+                </figure>
+              </p>
+              <p><img src="idr_struct.jpg" alt="idr struct"></p>
+              <h3 id="宏定义"><a href="#宏定义" class="headerlink" title="宏定义"></a>宏定义</h3>
+              <blockquote>
+                <p>IDR_BITS：子结点索引位数，5或6；bitmap是long类型，表示子结点个数为sizeof(long)<em>8；long占32位时，可表示32个子结点，则需索引位数为5；long占64位时，则需索引位数为6<br>IDR_SIZE：子结点个数，(1 &lt;&lt; IDR_BITS)<br>IDR_MASK：子结点索引掩码，((1 &lt;&lt; IDR_BITS)-1)<br>MAX_ID_SHIFT：ID空间大小位数，(sizeof(int)</em>8 - 1)；ID空间为0~0x7fffffff，即正整数<br>MAX_LEVEL：表示ID空间所需的层数，(MAX_ID_SHIFT + IDR_BITS - 1) / IDR_BITS；n层基数树表示id空间的个数=IDR_SIZE^n=1&lt;&lt;(n*IDR_BITS)，则表示整个ID空间需要n=roundup(log2(1&lt;&lt;MAX_ID_SHIFT)/IDR_BITS)=(MAX_ID_SHIFT + IDR_BITS - 1) / IDR_BITS层<br>IDR_FREE_MAX：表示idr缓存在分配id过程中所需结点的最大值，MAX_LEVEL + MAX_LEVEL；分配id过程中，可能需要对树进行扩容，如果出现结点为空还要分配结点；比如空树情况，分配一个值为0x7fffffff的id，则首先要扩容MAX_LEVEL个结点，再添加MAX_LEVEL-1个结点后才能正确分配id</p>
+              </blockquote>
+              <p>…剩下的就看<a href="https://blog.csdn.net/morphad/article/details/9051261" target="_blank" rel="noopener"> https://blog.csdn.net/morphad/article/details/9051261</a><br>有丶复杂</p>
+
+            </div>
+
+          </div>
+
+          <nav id="article-nav">
+
+            <a href="/uncategorized/angr-base/" id="article-nav-newer" class="article-nav-link-wrap">
+              <strong class="article-nav-caption">&lt;</strong>
+              <div class="article-nav-title">
+
+                Angr_base
+
+              </div>
+            </a>
+
+
+            <a href="/uncategorized/cve2017_5123/" id="article-nav-older" class="article-nav-link-wrap">
+              <div class="article-nav-title">Cve2017_5123</div>
+              <strong class="article-nav-caption">&gt;</strong>
+            </a>
+
+          </nav>
+
+        </article>
+      </div>
+      <footer id="footer">
+        <div class="outer">
+          <div id="footer-info">
+            <div class="footer-left">
+              &copy; 2019 lbb
+            </div>
+            <div class="footer-right">
+              <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
-  </div>
-</footer>
-    </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
 
 
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
-</script>
-<script src="/js/main.js"></script>
+    <script>
+      var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+      }
+    </script>
+    <script src="/js/main.js"></script>
 
 
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
     tex2jax: {
         inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
         processEscapes: true,
@@ -230,9 +255,8 @@ MathJax.Hub.Queue(function() {
 });
 </script>
 
-<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
-
-
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
   </div>
 </body>
+
 </html>
